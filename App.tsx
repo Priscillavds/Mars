@@ -1,47 +1,93 @@
-import * as React from 'react';
-import { useState } from 'react';
-import { Text, View, TextInput, StyleSheet, StyleProp, ViewStyle, Button } from 'react-native';
-import Constants from 'expo-constants';
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { FontAwesome } from "@expo/vector-icons";
-import { MaterialIcons } from '@expo/vector-icons';
-import Settings from './Settings';
-import { LinearGradient } from "expo-linear-gradient";
-import BVLinearGradient from 'react-native-linear-gradient';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Pressable, Alert, Button, Image } from 'react-native';
+import { NavigationContainer,useNavigation } from "@react-navigation/native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import React from 'react';
 
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
 
-export default function App() {
+const HomeScreen = () => {
+  const navigation : any = useNavigation();
+    return (
+      <View style={styles.container}>
+      <Text style={styles.title}>Home</Text>
+      <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At in tellus integer feugiat scelerisque varius morbi. Faucibus turpis in eu mi bibendum neque. Tristique nulla aliquet enim tortor at. Neque ornare aenean euismod elementum nisi quis eleifend. Cursus vitae congue mauris rhoncus aenean vel. Quis eleifend quam adipiscing vitae. Felis imperdiet proin fermentum leo vel orci porta. Neque laoreet suspendisse interdum consectetur libero id faucibus. Nec nam aliquam sem et. Egestas sed sed risus pretium quam vulputate dignissim suspendisse in. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget.</Text>
+      <Image style={styles.image} source={require('./assets/logo.png')}/>
+      <Pressable
+                style={styles.pressable}
+                onPress={() => {
+                    Alert.alert("Pressed!");
+                }}
+            >
+                <Text style={styles.buttontext}>Quiz</Text>
+      </Pressable>
+      <Button onPress={() => navigation.toggleDrawer()} title="Toggle Drawer"/>
+    </View>
+    );
+}
 
+
+
+const App = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: "blue",
-          tabBarInactiveTintColor: "black",
-        }}
-
-      >
-        <Tab.Screen name="Home" component={Settings} options={{
-          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
-        }} />
-        <Tab.Screen name="Settings" component={Settings} options={{
-          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
-        }} />
-
-      </Tab.Navigator>
+      <Drawer.Navigator useLegacyImplementation>
+        <Drawer.Screen name="Home" component={HomeScreen} />
+      </Drawer.Navigator>
     </NavigationContainer>
-
   );
 }
 
+/*
+const App = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Home</Text>
+      <Text style={styles.title}></Text>
+      <Text style={styles.title}></Text>
+      
+      <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At in tellus integer feugiat scelerisque varius morbi. Faucibus turpis in eu mi bibendum neque. Tristique nulla aliquet enim tortor at. Neque ornare aenean euismod elementum nisi quis eleifend. Cursus vitae congue mauris rhoncus aenean vel. Quis eleifend quam adipiscing vitae. Felis imperdiet proin fermentum leo vel orci porta. Neque laoreet suspendisse interdum consectetur libero id faucibus. Nec nam aliquam sem et. Egestas sed sed risus pretium quam vulputate dignissim suspendisse in. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget.</Text>
+      <Text style={styles.title}></Text>
+      <Text style={styles.title}></Text>
+      
+      <Pressable
+                style={styles.pressable}
+                onPress={() => {
+                    Alert.alert("Pressed!");
+                }}
+            >
+                <Text style={styles.buttontext}>Quiz</Text>
+      </Pressable>
+      
+    </View>
+  );
+}*/
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex:1,
+    backgroundColor: '#ffb7b2',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 15
+    
   },
+  pressable: {
+    backgroundColor: '#ff4032'
+  },
+  text: {
+    color:'#AD2B2B'
+  },
+  buttontext: {
+    color: 'white'
+  },
+  title: {
+    fontSize: 32,
+    color: '#ff1100'
+  },
+  image: {
+    width:95,
+  }
 });
+
+export default App;
