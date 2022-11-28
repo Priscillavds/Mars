@@ -12,20 +12,20 @@ const Timer = () => {
     setTimer(a);
   }
   return <View style={styles.buttoncontainer}>
-    <Text style={styles.textstyle}>Time limit</Text>
+    <Text style={styles.textstylesub}>Time limit</Text>
     <View>
       <Button
         mode={timer == 10 ? "contained" : "text"}
         onPress={() => changeTimer(10)}
-        color="white">10 Seconds</Button>
+        color="yellow">10 Seconds</Button>
       <Button
         mode={timer == 20 ? "contained" : "text"}
         onPress={() => changeTimer(20)}
-        color="white">20 Seconds</Button>
+        color="yellow">20 Seconds</Button>
       <Button
         mode={timer == 30 ? "contained" : "text"}
         onPress={() => changeTimer(30)}
-        color="white">30 Seconds</Button>
+        color="yellow">30 Seconds</Button>
     </View>
 
   </View>
@@ -58,20 +58,20 @@ const Difficulty = () => {
   }
 
   return <View style={styles.buttoncontainer}>
-    <Text style={styles.textstyle}>Difficulty</Text>
+    <Text style={styles.textstylesub}>Difficulty</Text>
     <View>
       <Button
         mode={diff == "easy" ? "contained" : "text"}
         onPress={() => DifficultySetter("easy")}
-        color="white">Easy</Button>
+        color="yellow">Easy</Button>
       <Button
         mode={diff == "normal" ? "contained" : "text"}
         onPress={() => DifficultySetter("normal")}
-        color="white">Normal</Button>
+        color="yellow">Normal</Button>
       <Button
         mode={diff == "hard" ? "contained" : "text"}
         onPress={() => DifficultySetter("hard")}
-        color="white">Hard</Button>
+        color="yellow">Hard</Button>
     </View>
   </View>
 }
@@ -80,6 +80,8 @@ export default function Settings() {
     <LinearGradient colors={["#ff0000", "#ff9500"]}>
       <View style={{ backgroundColor: "white", height: 50 }}></View>
       <View style={styles.gradient}>
+        <Text style={styles.textstyle}>Settings</Text>
+        <Text></Text>
         <Difficulty />
         <Text></Text>
         <Timer />
@@ -106,7 +108,12 @@ const styles = StyleSheet.create({
   gradient: {
     height: 720
   },
-  textstyle: {
+  textstylesub: {
     fontSize: 30
+  },
+  textstyle:{
+    fontSize:40,
+    alignItems:"center",
+    justifyContent:"center"
   }
 });
