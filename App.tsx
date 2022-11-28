@@ -2,39 +2,37 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, Alert, Button, Image } from 'react-native';
 import { NavigationContainer,useNavigation } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from 'react';
+import Settings from './Settings';
+import HomeScreen from './Homescreen';
 
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
-const HomeScreen = () => {
-  const navigation : any = useNavigation();
-    return (
-      <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At in tellus integer feugiat scelerisque varius morbi. Faucibus turpis in eu mi bibendum neque. Tristique nulla aliquet enim tortor at. Neque ornare aenean euismod elementum nisi quis eleifend. Cursus vitae congue mauris rhoncus aenean vel. Quis eleifend quam adipiscing vitae. Felis imperdiet proin fermentum leo vel orci porta. Neque laoreet suspendisse interdum consectetur libero id faucibus. Nec nam aliquam sem et. Egestas sed sed risus pretium quam vulputate dignissim suspendisse in. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget.</Text>
-      <Image style={styles.image} source={require('./assets/logo.png')}/>
-      <Pressable
-                style={styles.pressable}
-                onPress={() => {
-                    Alert.alert("Pressed!");
-                }}
-            >
-                <Text style={styles.buttontext}>Quiz</Text>
-      </Pressable>
-      <Button onPress={() => navigation.toggleDrawer()} title="Toggle Drawer"/>
-    </View>
-    );
-}
+function App() {
 
-
-
-const App = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator useLegacyImplementation>
-        <Drawer.Screen name="Home" component={HomeScreen} />
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "green",
+        tabBarInactiveTintColor: "blue",
+      }}
+      
+      >
+      <Tab.Screen name="Home" component={HomeScreen} options={{
+            tabBarIcon: ({color, size} : any) => <FontAwesome name="home" size={size} color={color} />,
+        }} />
+      <Tab.Screen name="Settings" component={Settings} options={{
+            tabBarIcon: ({color, size} : any) => <MaterialIcons name="settings" size={size} color={color} />
+        }} />
+
+    </Tab.Navigator>
+  </NavigationContainer>
+
   );
 }
 
