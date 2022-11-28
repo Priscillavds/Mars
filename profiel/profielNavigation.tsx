@@ -1,0 +1,26 @@
+import { StatusBar } from 'expo-status-bar';
+import { Pressable, StyleSheet, Text, View, } from 'react-native';
+import Constants from "expo-constants";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+/*import {
+    SharedElement,
+    createSharedElementStackNavigator,
+  } from 'react-navigation-shared-element';*/
+import { ProfielPage } from "./profielPage/profielPage"
+import { Profielen } from "./profielen/profielen"
+
+
+const Stack = createNativeStackNavigator();
+
+export const ProfielenNavigation = () => {
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+                <Stack.Screen name="Profielen" component={Profielen} />
+                <Stack.Screen name="Profiel" component={ProfielPage} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    )
+}

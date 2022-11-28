@@ -8,7 +8,54 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from 'react';
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
+import {ProfielenNavigation} from "./profiel/profielNavigation"
 
+interface Profiel {
+  id: number,
+  name: string,
+  wrong: number,
+  correct: number
+}
+
+export const profielen: Profiel[] = [
+  {
+    id: 0,
+    name: "Joris en de draak",
+    wrong: 10,
+    correct: 5
+  },
+  {
+    id: 1,
+    name: "Kondaa",
+    wrong: 5,
+    correct: 10
+  },
+  {
+    id: 2,
+    name: "The ride to hapiness by tomorrowland",
+    wrong: 50,
+    correct: 100
+  }
+  ,
+  {
+    id: 3,
+    name: "Revolution",
+    wrong: 0,
+    correct: 0
+  },
+  {
+    id: 4,
+    name: "Falcon",
+    wrong: 10,
+    correct: 5
+  },
+  {
+    id: 5,
+    name: "De smurfer",
+    wrong: 0 ,
+    correct: 5
+  },
+]
 const Tab = createBottomTabNavigator();
 
 function App() {
