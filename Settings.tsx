@@ -80,7 +80,9 @@ export default function Settings() {
     <LinearGradient colors={["#ff0000", "#ff9500"]}>
       <View style={{ backgroundColor: "white", height: 50 }}></View>
       <View style={styles.gradient}>
-        <Text style={styles.textstyle}>Settings</Text>
+        <View style={styles.titleview}>
+          <Text style={styles.textstylemain}>Settings</Text>
+        </View>
         <Text></Text>
         <Difficulty />
         <Text></Text>
@@ -100,20 +102,24 @@ const styles = StyleSheet.create({
   },
   buttoncontainer: {
     borderColor: 'black',
-    backgroundColor: "transparant",
+    backgroundColor: "transparent",
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: "10rem"
+    fontSize: "10rem",
   },
   gradient: {
     height: 720
   },
   textstylesub: {
-    fontSize: 30
+    fontSize: 30,
+    fontFamily:"monospace"
   },
-  textstyle:{
+  titleview: {
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  textstylemain:{
     fontSize:40,
-    alignItems:"center",
-    justifyContent:"center"
+    fontFamily:"monospace"
   }
 });
