@@ -6,29 +6,30 @@ import { LinearGradient } from "expo-linear-gradient";
 import BVLinearGradient from 'react-native-linear-gradient';
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 
-let buttonContained:any = "uncontained"
-let buttonUnContained:any = "contained"
-
 const Timer = () => {
   const [timer, setTimer] = useState(10);
   const changeTimer = (a: number) => {
     setTimer(a);
   }
   return <View style={styles.buttoncontainer}>
-    <Button
-    mode={timer==10?"contained":"text"}
-      onPress={() => changeTimer(10)}
-      color="white">10 Seconds</Button>
-    <Button
-    mode={timer==20?"contained":"text"}
-      onPress={() => changeTimer(20)}
-      color="white">20 Seconds</Button>
-    <Button
-    mode={timer==30?"contained":"text"}
-      onPress={() => changeTimer(30)}
-      color="white">30 Seconds</Button>
+    <Text style={styles.textstyle}>Time limit</Text>
+    <View>
+      <Button
+        mode={timer == 10 ? "contained" : "text"}
+        onPress={() => changeTimer(10)}
+        color="white">10 Seconds</Button>
+      <Button
+        mode={timer == 20 ? "contained" : "text"}
+        onPress={() => changeTimer(20)}
+        color="white">20 Seconds</Button>
+      <Button
+        mode={timer == 30 ? "contained" : "text"}
+        onPress={() => changeTimer(30)}
+        color="white">30 Seconds</Button>
+    </View>
+
   </View>
-  
+
 
 }
 
@@ -60,15 +61,15 @@ const Difficulty = () => {
     <Text style={styles.textstyle}>Difficulty</Text>
     <View>
       <Button
-      mode={diff=="easy"?"contained":"text"}
+        mode={diff == "easy" ? "contained" : "text"}
         onPress={() => DifficultySetter("easy")}
         color="white">Easy</Button>
       <Button
-      mode={diff=="normal"?"contained":"text"}
+        mode={diff == "normal" ? "contained" : "text"}
         onPress={() => DifficultySetter("normal")}
         color="white">Normal</Button>
       <Button
-      mode={diff=="hard"?"contained":"text"}
+        mode={diff == "hard" ? "contained" : "text"}
         onPress={() => DifficultySetter("hard")}
         color="white">Hard</Button>
     </View>
@@ -98,14 +99,14 @@ const styles = StyleSheet.create({
   buttoncontainer: {
     borderColor: 'black',
     backgroundColor: "transparant",
-    justifyContent:'center',
-    alignItems:'center',
-    fontSize:"10rem"
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: "10rem"
   },
   gradient: {
     height: 720
   },
-  textstyle:{
-    fontSize:30
+  textstyle: {
+    fontSize: 30
   }
 });
