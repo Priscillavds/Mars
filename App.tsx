@@ -1,12 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { useState } from 'react';
+import { Text, View, TextInput, StyleSheet, StyleProp, ViewStyle, Button } from 'react-native';
+import Constants from 'expo-constants';
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons } from '@expo/vector-icons';
+import Settings from './Settings';
+import { LinearGradient } from "expo-linear-gradient";
+import BVLinearGradient from 'react-native-linear-gradient';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: "blue",
+          tabBarInactiveTintColor: "black",
+        }}
+
+      >
+        <Tab.Screen name="Home" component={Settings} options={{
+          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
+        }} />
+        <Tab.Screen name="Settings" component={Settings} options={{
+          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
+        }} />
+
+      </Tab.Navigator>
+    </NavigationContainer>
+
   );
 }
 
