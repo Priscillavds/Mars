@@ -5,11 +5,25 @@ import { Button } from 'react-native-paper'
 import { LinearGradient } from "expo-linear-gradient";
 import BVLinearGradient from 'react-native-linear-gradient';
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Timer = () => {
-  const [timer, setTimer] = useState(10);
-  const changeTimer = (a: number) => {
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [timer, setTimer] = useState<number>(10);
+  const loadData = async () => {
+    let time = await AsyncStorage.getItem("timer");
+    if (time == null) {
+      setDataLoaded(true);
+    }
+    else {
+      setTimer(parseInt(time))
+      setDataLoaded(true);
+    }
+  }
+  if (!dataLoaded) loadData();
+  const changeTimer = async(a: number) => {
     setTimer(a);
+    await AsyncStorage.setItem("timer",a.toString())
   }
   return <View style={styles.buttoncontainer}>
     <Text style={styles.textstylesub}>Time limit</Text>
@@ -33,24 +47,40 @@ const Timer = () => {
 
 }
 
+
 const Difficulty = () => {
+  const [dataLoaded, setDataLoaded] = useState(false);
   const [diff, setDiff] = useState("easy");
   const [diffRange, setDiffRange] = useState(0);
   const [diffOffset, setDiffOffset] = useState(0);
-  const DifficultySetter = (a: string) => {
+  const loadData = async () => {
+    let storedDiff = await AsyncStorage.getItem("difficulty");
+    if (storedDiff == null) {
+      setDataLoaded(true);
+    }
+    else {
+      DifficultySetter(storedDiff)
+      setDataLoaded(true);
+    }
+  }
+  if (!dataLoaded) loadData();
+  const DifficultySetter = async(a: string) => {
     switch (a) {
       case "easy":
         setDiff(a);
+        await AsyncStorage.setItem("difficulty",a)
         setDiffRange(300);
         setDiffOffset(100);
         break;
       case "normal":
         setDiff(a);
+        await AsyncStorage.setItem("difficulty",a)
         setDiffRange(700);
         setDiffOffset(400);
         break;
       case "hard":
         setDiff(a);
+        await AsyncStorage.setItem("difficulty",a)
         setDiffRange(800);
         setDiffOffset(1000);
         break;
@@ -112,14 +142,12 @@ const styles = StyleSheet.create({
   },
   textstylesub: {
     fontSize: 30,
-    fontFamily:"monospace"
   },
   titleview: {
     alignItems: "center",
     justifyContent: "center"
   },
-  textstylemain:{
-    fontSize:40,
-    fontFamily:"monospace"
+  textstylemain: {
+    fontSize: 40,
   }
 });
