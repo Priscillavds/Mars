@@ -10,17 +10,20 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ProfielPage } from "./profielPage/profielPage"
 import { Profielen } from "./profielen/profielen"
 
+interface Profiel {
+    id: number,
+    name: string,
+    wrong: number,
+    correct: number
+}
 
 const Stack = createNativeStackNavigator();
 
-export const ProfielenNavigation = () => {
-
+export const ProfielenNavigation = ({route }: { route:any }) => {
     return (
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Profielen" component={Profielen} />
-                <Stack.Screen name="Profiel" component={ProfielPage} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Profielen" component={Profielen } initialParams={route.params} />
+            <Stack.Screen name="Profiel" component={ProfielPage} />
+        </Stack.Navigator>
     )
 }

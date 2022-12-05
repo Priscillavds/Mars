@@ -1,14 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, Alert, Button, Image } from 'react-native';
-import { NavigationContainer,useNavigation } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+//import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React from 'react';
+import React, { useState, useContext } from "react";
+
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
-import {ProfielenNavigation} from "./profiel/profielNavigation"
+import { ProfielenNavigation } from "./profiel/profielNavigation"
 
 interface Profiel {
   id: number,
@@ -17,7 +18,7 @@ interface Profiel {
   correct: number
 }
 
-export const profielen: Profiel[] = [
+const profielen: Profiel[] = [
   {
     id: 0,
     name: "Joris en de draak",
@@ -52,33 +53,94 @@ export const profielen: Profiel[] = [
   {
     id: 5,
     name: "De smurfer",
-    wrong: 0 ,
+    wrong: 0,
     correct: 5
   },
-]
+];
+
 const Tab = createBottomTabNavigator();
 
 function App() {
+  const [profiels, setProfiels] = useState<Profiel[]>(profielen);
+  const [profielId, setProfielId] = useState<number>(0);
+
+  const getProfiel = (id: number): Profiel | null => {
+    let result: Profiel | null = null;
+    profiels.forEach((profiel: Profiel) => {
+      if (profiel.id == id) {
+        result = profiel;
+      }
+    })
+    return result;
+  }
+
+  const getProfielIndex = (id: number): number | null => {
+    let result: number | null = null;
+    profiels.forEach((profiel: Profiel, index: number) => {
+      if (profiel.id == id) {
+        result = index;
+      }
+    })
+    return result;
+  }
+
+  const updateProfiel = (id: number, newProfiel: Profiel): void => {
+    let oldProfiel: Profiel | null = getProfiel(id);
+    if (oldProfiel == null) { return }
+
+    oldProfiel.correct = newProfiel.correct;
+    oldProfiel.wrong = newProfiel.wrong;
+    oldProfiel.name = newProfiel.name;
+
+    setProfiels([...profiels]);
+  }
+
+  const deleteProfiel = (id: number): void => {
+    let index: number | null = getProfielIndex(id);
+    if (index == null || profiels.length <= 1) { return; }
+
+    //if (profiels[index].id == profielId) { setProfielId(profiels[0].id); }
+    profiels.splice(index, 1);
+
+    setProfiels([...profiels]);
+  }
+
+  const newProfiel = (newProfiel: Profiel): Profiel => {
+    let newId: number = profiels[profiels.length - 1].id + 1;
+
+    newProfiel.id = newId;
+    profiels.push(newProfiel)
+
+    setProfiels([...profiels]);
+
+    return newProfiel;
+  }
 
   return (
     <NavigationContainer>
-    <Tab.Navigator
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: "green",
-        tabBarInactiveTintColor: "blue",
-      }}
-      
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: "green",
+          tabBarInactiveTintColor: "blue",
+        }}
+
       >
-      <Tab.Screen name="Home" component={HomeScreen} options={{
-            tabBarIcon: ({color, size} : any) => <FontAwesome name="home" size={size} color={color} />,
+        <Tab.Screen name="Home" component={HomeScreen} options={{
+          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
         }} />
-      <Tab.Screen name="Settings" component={Settings} options={{
-            tabBarIcon: ({color, size} : any) => <MaterialIcons name="settings" size={size} color={color} />
+        <Tab.Screen name="Profiels" component={ProfielenNavigation}
+          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, profielId: profielId, setProfielId: setProfielId }}
+          options={{
+            tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color}
+            />,
+          }} />
+        <Tab.Screen name="Settings" component={Settings} options={{
+          tabBarIcon: ({ color, size }: any) => <MaterialIcons name="settings" size={size} color={color} />
         }} />
 
-    </Tab.Navigator>
-  </NavigationContainer>
+      </Tab.Navigator>
+    </NavigationContainer>
 
   );
 }
@@ -111,18 +173,18 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     backgroundColor: '#ffb7b2',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15
-    
+
   },
   pressable: {
     backgroundColor: '#ff4032'
   },
   text: {
-    color:'#AD2B2B'
+    color: '#AD2B2B'
   },
   buttontext: {
     color: 'white'
@@ -132,7 +194,7 @@ const styles = StyleSheet.create({
     color: '#ff1100'
   },
   image: {
-    width:95,
+    width: 95,
   }
 });
 

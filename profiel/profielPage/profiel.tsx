@@ -21,15 +21,16 @@ interface ProfielParm {
     total: number,
     procent: number,
     navigation: any,
-    setEdit: { (edit: boolean): void }
+    setEdit: { (edit: boolean): void },
+    profielId: number,
+    setprofielId: { (id: number): void }
 }
 
-export const Profiel = ({ profiel, color, total, procent, navigation, setEdit }: ProfielParm) => {
+export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, profielId, setprofielId }: ProfielParm) => {
     return (<>
         <View style={styles.top}>
             <View style={styles.img}></View>
             <Text style={styles.name}>{profiel.name}</Text>
-
         </View>
         <View style={styles.bottom}>
             <View style={styles.procent}>
@@ -43,6 +44,10 @@ export const Profiel = ({ profiel, color, total, procent, navigation, setEdit }:
             </View>
             <View style={styles.opties}>
                 <Button func={() => { navigation.push('Profielen') }} name="Back" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                {profielId == profiel.id ?
+                    <Button func={() => { }} name="Selected" backColor={darkBlue} borderColor={darkBlue} textColor="lightgrey"></Button> :
+                    <Button func={() => { profielId = profiel.id; setprofielId(profielId); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                }
                 <Button func={() => { setEdit(true) }} name="Edit" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
             </View>
         </View>

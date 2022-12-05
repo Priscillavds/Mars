@@ -21,9 +21,10 @@ interface Profiel {
 export const ProfielPage = ({ route, navigation }: { route: any, navigation: any }) => {
     const [edit, setEdit] = useState<boolean>(false);
     const [sure, setSure] = useState<string>("");
+    const [name, SetName] = useState<string>(route.params.profiel.name)
 
-    const { profiel } = route.params;
-
+    const { profiel, updateProfiel, deleteProfiel,profielId,setProfielId } = route.params;
+    console.log(profielId)
     const total: number = profiel.correct + profiel.wrong;
     const procent: number = total == 0 ? 0 : Math.round((profiel.correct / total) * 100);
 
@@ -34,8 +35,10 @@ export const ProfielPage = ({ route, navigation }: { route: any, navigation: any
 
     return (
         <View style={styles.container}>
-            {edit ? <Edit profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} setSure={setSure}></Edit> : <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit}></Profiel>}
-            {sure && <AreYouSure sure={sure} setSure={setSure} setEdit={setEdit}></AreYouSure>}
+            {edit ?
+                <Edit profiel={profiel} color={color} total={total} procent={procent} setSure={setSure} name={name} setName={SetName} ></Edit> :
+                <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} profielId={profielId} setprofielId={setProfielId}></Profiel>}
+            {sure && <AreYouSure profiel={profiel} updateProfiel={updateProfiel} deleteProfiel={deleteProfiel} sure={sure} setSure={setSure} setEdit={setEdit} name={name} navigation={navigation}></AreYouSure>}
         </View>
     )
 }

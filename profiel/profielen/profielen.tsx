@@ -5,7 +5,6 @@ import Constants from "expo-constants";
 
 import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
 import { Button } from "../../algemeen/button";
-import { profielen } from "../../App";
 import { ExempleProfiel } from "./ExempleProfiel";
 
 interface Profiel {
@@ -16,8 +15,8 @@ interface Profiel {
 }
 
 
-export const Profielen = ({ navigation }: { navigation: any }) => {
-    let sortProfielen: Profiel[] = profielen.sort(
+export const Profielen = ({navigation,route }: { navigation: any,route:any }) => {
+    let sortProfielen: Profiel[] = route.params.profiels.sort(
         (a: Profiel, b: Profiel) => {
             const totalA: number = a.correct + a.wrong;
             const procentA: number = totalA == 0 ? 0 : Math.round((a.correct / totalA) * 100);
@@ -28,23 +27,23 @@ export const Profielen = ({ navigation }: { navigation: any }) => {
             if (totalA != totalB) { return totalB - totalA; }
             return a.id - b.id;
         }
-    )
+    );
 
-
+    console.log(route.params.profielId);
     return (
         <View style={styles.container}>
             <ScrollView>
                 {
                     sortProfielen.map((profiel: Profiel, index: number) => {
                         return (
-                            <Pressable onPress={() => navigation.push('Profiel', { profiel})}>
+                            <Pressable key={index} onPress={() => navigation.push('Profiel', { profiel, ...route.params})}>
                                 <ExempleProfiel key={index} profiel={profiel} rank={index + 1}></ExempleProfiel>
                             </Pressable>
                         )
                     })
                 }
                 <View style={styles.add}>
-                    <Button func={() => { }} name="Add" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                    <Button func={() => { let profiel = route.params.newProfiel({id:87,name:"new Speler", wrong:0,correct:0}); navigation.push('Profiel',{ profiel, ...route.params})} } name="Add" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
                 </View>
             </ScrollView>
         </View>
