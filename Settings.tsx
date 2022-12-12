@@ -8,23 +8,28 @@ import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Timer = () => {
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(10);
   const loadData = async () => {
     let time = await AsyncStorage.getItem("timer");
+
     if (time == null) {
       setDataLoaded(true);
     }
+
     else {
       setTimer(parseInt(time))
       setDataLoaded(true);
     }
   }
+
   if (!dataLoaded) loadData();
-  const changeTimer = async(a: number) => {
+
+  const changeTimer = async (a: number) => {
     setTimer(a);
-    await AsyncStorage.setItem("timer",a.toString())
+    await AsyncStorage.setItem("timer", a.toString())
   }
+
   return <View style={styles.buttoncontainer}>
     <Text style={styles.textstylesub}>Time limit</Text>
     <View>
@@ -49,40 +54,45 @@ const Timer = () => {
 
 
 const Difficulty = () => {
-  const [dataLoaded, setDataLoaded] = useState(false);
-  const [diff, setDiff] = useState("easy");
-  const [diffRange, setDiffRange] = useState(0);
-  const [diffOffset, setDiffOffset] = useState(0);
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+  const [diff, setDiff] = useState<string>("easy");
+
   const loadData = async () => {
     let storedDiff = await AsyncStorage.getItem("difficulty");
+
     if (storedDiff == null) {
       setDataLoaded(true);
     }
+
     else {
       DifficultySetter(storedDiff)
       setDataLoaded(true);
     }
   }
   if (!dataLoaded) loadData();
-  const DifficultySetter = async(a: string) => {
+
+  const DifficultySetter = async (a: string) => {
     switch (a) {
+
       case "easy":
         setDiff(a);
-        await AsyncStorage.setItem("difficulty",a)
-        setDiffRange(300);
-        setDiffOffset(100);
+        await AsyncStorage.setItem("difficulty", a)
+        await AsyncStorage.setItem("difficultyrange", "300")
+        await AsyncStorage.setItem("difficultyoffset", "100")
         break;
+
       case "normal":
         setDiff(a);
-        await AsyncStorage.setItem("difficulty",a)
-        setDiffRange(700);
-        setDiffOffset(400);
+        await AsyncStorage.setItem("difficulty", a)
+        await AsyncStorage.setItem("difficultyrange", "700")
+        await AsyncStorage.setItem("difficultyoffset", "400")
         break;
+
       case "hard":
         setDiff(a);
-        await AsyncStorage.setItem("difficulty",a)
-        setDiffRange(800);
-        setDiffOffset(1000);
+        await AsyncStorage.setItem("difficulty", a)
+        await AsyncStorage.setItem("difficultyrange", "1000")
+        await AsyncStorage.setItem("difficultyoffset", "800");
         break;
     }
   }
@@ -105,6 +115,23 @@ const Difficulty = () => {
     </View>
   </View>
 }
+
+const ClearStorage = () => {
+  const ClearAsync = async () => {
+    await AsyncStorage.setItem("difficulty","easy")
+    await AsyncStorage.setItem("difficultyoffset","100")
+    await AsyncStorage.setItem("difficultyrange","300")
+    await AsyncStorage.setItem("timer","10")
+  }
+  return <View style={styles.buttoncontainer}>
+    <Button
+    mode='contained'
+    onPress={()=> ClearAsync()}
+    color='yellow'
+    >Reset Settings</Button>
+  </View>
+}
+
 export default function Settings() {
   return (
     <LinearGradient colors={["#ff0000", "#ff9500"]}>
@@ -117,6 +144,8 @@ export default function Settings() {
         <Difficulty />
         <Text></Text>
         <Timer />
+        <Text></Text>
+        <ClearStorage/>
       </View>
     </LinearGradient>
   );
