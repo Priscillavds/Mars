@@ -15,7 +15,8 @@ interface Profiel {
   id: number,
   name: string,
   wrong: number,
-  correct: number
+  correct: number,
+  imgUri?: string
 }
 
 const profielen: Profiel[] = [
@@ -61,8 +62,8 @@ const profielen: Profiel[] = [
 const Tab = createBottomTabNavigator();
 
 function App() {
+  const [playerId, setPlayerId] = useState<number>(0);
   const [profiels, setProfiels] = useState<Profiel[]>(profielen);
-  const [profielId, setProfielId] = useState<number>(0);
 
   const getProfiel = (id: number): Profiel | null => {
     let result: Profiel | null = null;
@@ -85,12 +86,15 @@ function App() {
   }
 
   const updateProfiel = (id: number, newProfiel: Profiel): void => {
+
+    setPlayer(3);
     let oldProfiel: Profiel | null = getProfiel(id);
     if (oldProfiel == null) { return }
 
     oldProfiel.correct = newProfiel.correct;
     oldProfiel.wrong = newProfiel.wrong;
     oldProfiel.name = newProfiel.name;
+    oldProfiel.imgUri = newProfiel.imgUri;
 
     setProfiels([...profiels]);
   }
@@ -99,10 +103,14 @@ function App() {
     let index: number | null = getProfielIndex(id);
     if (index == null || profiels.length <= 1) { return; }
 
-    //if (profiels[index].id == profielId) { setProfielId(profiels[0].id); }
-    profiels.splice(index, 1);
-
-    setProfiels([...profiels]);
+    if (profiels[index].id == playerId) {
+      profiels.splice(index, 1);
+      setPlayer(3); // NOG AANPASSEN ANY
+      setProfiels([...profiels]);
+    } else {
+      profiels.splice(index, 1);
+      setProfiels([...profiels]);
+    }
   }
 
   const newProfiel = (newProfiel: Profiel): Profiel => {
@@ -114,6 +122,13 @@ function App() {
     setProfiels([...profiels]);
 
     return newProfiel;
+  }
+
+  const setPlayer = (id: number): void => {
+    let index: number | null = getProfielIndex(id);
+    if (index == null) { return; }
+
+    setPlayerId(id);
   }
 
   return (
@@ -130,7 +145,7 @@ function App() {
           tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
         }} />
         <Tab.Screen name="Profiels" component={ProfielenNavigation}
-          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, profielId: profielId, setProfielId: setProfielId }}
+          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, playerId: playerId, setPlayer: setPlayer }}
           options={{
             tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color}
             />,

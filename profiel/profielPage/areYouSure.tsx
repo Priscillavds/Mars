@@ -12,7 +12,8 @@ interface Profiel {
     id: number,
     name: string,
     wrong: number,
-    correct: number
+    correct: number,
+    imgUri?: string
 }
 
 interface AreYouSureParm {
@@ -23,16 +24,17 @@ interface AreYouSureParm {
     setEdit: { (edit: boolean): void },
     setSure: { (sure: string): void },
     name: string,
-    navigation: any
+    navigation: any,
+    imgUri?: string
 }
 
-export const AreYouSure = ({ profiel, updateProfiel, deleteProfiel, sure, setEdit, setSure, name, navigation }: AreYouSureParm) => {
+export const AreYouSure = ({ profiel, updateProfiel, deleteProfiel, sure, setEdit, setSure, name, navigation, imgUri }: AreYouSureParm) => {
     const resetFunc = () => {
-        updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: 0, correct: 0 })
+        updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: 0, correct: 0, imgUri: profiel.imgUri })
     }
 
     const saveFunc = () => {
-        updateProfiel(profiel.id, { id: 87, name: name, wrong: profiel.wrong, correct: profiel.correct })
+        updateProfiel(profiel.id, { id: 87, name: name, wrong: profiel.wrong, correct: profiel.correct, imgUri: imgUri })
     }
 
     const deleteFunc = () => {

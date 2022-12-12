@@ -29,7 +29,8 @@ export const Profielen = ({navigation,route }: { navigation: any,route:any }) =>
         }
     );
 
-    console.log(route.params.profielId);
+        console.log(route.params.playerId)
+
     return (
         <View style={styles.container}>
             <ScrollView>

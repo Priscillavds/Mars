@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
+import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Image } from 'react-native';
 import Constants from "expo-constants";
 
 import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
@@ -12,7 +12,8 @@ interface Profiel {
     id: number,
     name: string,
     wrong: number,
-    correct: number
+    correct: number,
+    imgUri?: string
 }
 
 interface ProfielParm {
@@ -22,14 +23,19 @@ interface ProfielParm {
     procent: number,
     navigation: any,
     setEdit: { (edit: boolean): void },
-    profielId: number,
-    setprofielId: { (id: number): void }
+    playerId: number,
+    setPlayer: { (id: number): void }
 }
 
-export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, profielId, setprofielId }: ProfielParm) => {
+export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, playerId, setPlayer }: ProfielParm) => {
     return (<>
         <View style={styles.top}>
-            <View style={styles.img}></View>
+            <View style={styles.imgContainer}>
+                {profiel.imgUri ?
+                    <Image style={styles.img} source={{ uri: profiel.imgUri }} /> :
+                    <Image style={styles.img} source={require("../NoImg.png")} />
+                }
+            </View>
             <Text style={styles.name}>{profiel.name}</Text>
         </View>
         <View style={styles.bottom}>
@@ -44,9 +50,9 @@ export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, p
             </View>
             <View style={styles.opties}>
                 <Button func={() => { navigation.push('Profielen') }} name="Back" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                {profielId == profiel.id ?
+                {playerId == profiel.id ?
                     <Button func={() => { }} name="Selected" backColor={darkBlue} borderColor={darkBlue} textColor="lightgrey"></Button> :
-                    <Button func={() => { profielId = profiel.id; setprofielId(profielId); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                    <Button func={() => { setPlayer(profiel.id); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
                 }
                 <Button func={() => { setEdit(true) }} name="Edit" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
             </View>
