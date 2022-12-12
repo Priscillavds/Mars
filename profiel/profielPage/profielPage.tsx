@@ -5,7 +5,7 @@ import Constants from "expo-constants";
 import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
 import { Detail } from "./detail";
 import { Button } from "../../algemeen/button"
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { AreYouSure } from "./areYouSure";
 import { Profiel } from "./profiel";
 import { Edit } from "./edit";
@@ -15,14 +15,22 @@ interface Profiel {
     id: number,
     name: string,
     wrong: number,
-    correct: number
+    correct: number,
+    imgUri?:string
 }
 
 export const ProfielPage = ({ route, navigation }: { route: any, navigation: any }) => {
     const [edit, setEdit] = useState<boolean>(false);
     const [sure, setSure] = useState<string>("");
+    const [name, SetName] = useState<string>(route.params.profiel.name)
+    const [imgUri, SetImgUri] = useState<string>(route.params.profiel.imgUri)
 
-    const { profiel } = route.params;
+    useEffect(() => {
+        SetName(profiel.name);
+        SetImgUri(profiel.imgUri);
+    },[edit])
+
+    const { profiel, updateProfiel, deleteProfiel, playerId, setPlayer } = route.params;
 
     const total: number = profiel.correct + profiel.wrong;
     const procent: number = total == 0 ? 0 : Math.round((profiel.correct / total) * 100);
@@ -34,8 +42,10 @@ export const ProfielPage = ({ route, navigation }: { route: any, navigation: any
 
     return (
         <View style={styles.container}>
-            {edit ? <Edit profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} setSure={setSure}></Edit> : <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit}></Profiel>}
-            {sure && <AreYouSure sure={sure} setSure={setSure} setEdit={setEdit}></AreYouSure>}
+            {edit ?
+                <Edit profiel={profiel} color={color} total={total} procent={procent} setSure={setSure} name={name} setName={SetName} imgUri={imgUri} SetImgUri={SetImgUri} ></Edit> :
+                <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} playerId={playerId} setPlayer={setPlayer}></Profiel>}
+            {sure && <AreYouSure profiel={profiel} updateProfiel={updateProfiel} deleteProfiel={deleteProfiel} sure={sure} setSure={setSure} setEdit={setEdit} name={name} navigation={navigation} imgUri={imgUri}></AreYouSure>}
         </View>
     )
 }
@@ -54,7 +64,7 @@ export const styles = StyleSheet.create({
         alignItems: "center"
     },
 
-    img: {
+    imgContainer: {
         width: 175,
         height: 175,
         backgroundColor: "lightgrey",
@@ -64,8 +74,14 @@ export const styles = StyleSheet.create({
         marginBottom: normalTextSize,
 
         justifyContent: "flex-end",
-        paddingBottom: 5,
-        paddingLeft: 87
+        paddingLeft: 125
+    },
+    img: {
+        position:"absolute",
+        width: 175 - (normalTextSize * .15 * 2),
+        height: 175 - (normalTextSize * .15 * 2),
+        top:- (normalTextSize * .0 ),
+        borderRadius: 10000,
     },
     name: {
         fontSize: normalTextSize * 1.25,
