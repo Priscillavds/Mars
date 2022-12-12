@@ -7,6 +7,15 @@ import BVLinearGradient from 'react-native-linear-gradient';
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+interface StorageProps {
+  siff?: string,
+  setDiff?: (difficulty: string) => void,
+  difficultyoffset?: string,
+  difficultyrange?: string,
+  timer?: string
+  setTimer?: (timer: string) => void
+}
+
 const Timer = () => {
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(10);
@@ -118,16 +127,17 @@ const Difficulty = () => {
 
 const ClearStorage = () => {
   const ClearAsync = async () => {
-    await AsyncStorage.setItem("difficulty","easy")
-    await AsyncStorage.setItem("difficultyoffset","100")
-    await AsyncStorage.setItem("difficultyrange","300")
-    await AsyncStorage.setItem("timer","10")
+    await AsyncStorage.removeItem("difficulty");
+    await AsyncStorage.removeItem("timer");
+    await AsyncStorage.removeItem("difficultyrange")
+    await AsyncStorage.removeItem("difficultyoffset")
+    alert("Settings will be reset on app restart")
   }
   return <View style={styles.buttoncontainer}>
     <Button
-    mode='contained'
-    onPress={()=> ClearAsync()}
-    color='yellow'
+      mode='contained'
+      onPress={() => ClearAsync()}
+      color='yellow'
     >Reset Settings</Button>
   </View>
 }
@@ -145,7 +155,7 @@ export default function Settings() {
         <Text></Text>
         <Timer />
         <Text></Text>
-        <ClearStorage/>
+        <ClearStorage />
       </View>
     </LinearGradient>
   );
