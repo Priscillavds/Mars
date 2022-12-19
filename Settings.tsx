@@ -7,70 +7,36 @@ import BVLinearGradient from 'react-native-linear-gradient';
 import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Timer = () => {
+interface StorageProps {
+  siff?: string,
+  setDiff?: (difficulty: string) => void,
+  difficultyoffset?: string,
+  difficultyrange?: string,
+  timer?: string
+  setTimer?: (timer: string) => void
+}
+
+const Options = () => {
+  const [diff, setDiff] = useState<string>("easy");
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
   const [timer, setTimer] = useState<number>(10);
-  const loadData = async () => {
-    let time = await AsyncStorage.getItem("timer");
 
+  const loadData = async () => {
+    let time: any = await AsyncStorage.getItem("timer");
+    let storedDiff: any = await AsyncStorage.getItem("difficulty");
     if (time == null) {
       setDataLoaded(true);
     }
 
     else {
       setTimer(parseInt(time))
+      DifficultySetter(storedDiff);
       setDataLoaded(true);
     }
   }
 
   if (!dataLoaded) loadData();
-
-  const changeTimer = async (a: number) => {
-    setTimer(a);
-    await AsyncStorage.setItem("timer", a.toString())
-  }
-
-  return <View style={styles.buttoncontainer}>
-    <Text style={styles.textstylesub}>Time limit</Text>
-    <View>
-      <Button
-        mode={timer == 10 ? "contained" : "text"}
-        onPress={() => changeTimer(10)}
-        color="yellow">10 Seconds</Button>
-      <Button
-        mode={timer == 20 ? "contained" : "text"}
-        onPress={() => changeTimer(20)}
-        color="yellow">20 Seconds</Button>
-      <Button
-        mode={timer == 30 ? "contained" : "text"}
-        onPress={() => changeTimer(30)}
-        color="yellow">30 Seconds</Button>
-    </View>
-
-  </View>
-
-
-}
-
-
-const Difficulty = () => {
-  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-  const [diff, setDiff] = useState<string>("easy");
-
-  const loadData = async () => {
-    let storedDiff = await AsyncStorage.getItem("difficulty");
-
-    if (storedDiff == null) {
-      setDataLoaded(true);
-    }
-
-    else {
-      DifficultySetter(storedDiff)
-      setDataLoaded(true);
-    }
-  }
-  if (!dataLoaded) loadData();
-
+  
   const DifficultySetter = async (a: string) => {
     switch (a) {
 
@@ -95,9 +61,36 @@ const Difficulty = () => {
         await AsyncStorage.setItem("difficultyoffset", "800");
         break;
     }
+
+
+  }
+
+  const changeTimer = async (a: number) => {
+    setTimer(a);
+    await AsyncStorage.setItem("timer", a.toString())
+  }
+
+  const ResetStorage = async () => {
+    changeTimer(10);
+    DifficultySetter("easy");
   }
 
   return <View style={styles.buttoncontainer}>
+    <Text style={styles.textstylesub}>Time limit</Text>
+    <View>
+      <Button
+        mode={timer == 10 ? "contained" : "text"}
+        onPress={() => changeTimer(10)}
+        color="yellow">10 Seconds</Button>
+      <Button
+        mode={timer == 20 ? "contained" : "text"}
+        onPress={() => changeTimer(20)}
+        color="yellow">20 Seconds</Button>
+      <Button
+        mode={timer == 30 ? "contained" : "text"}
+        onPress={() => changeTimer(30)}
+        color="yellow">30 Seconds</Button>
+    </View>
     <Text style={styles.textstylesub}>Difficulty</Text>
     <View>
       <Button
@@ -113,24 +106,20 @@ const Difficulty = () => {
         onPress={() => DifficultySetter("hard")}
         color="yellow">Hard</Button>
     </View>
+    <Text></Text>
+    <View>
+      <Button
+        mode='contained'
+        onPress={() => ResetStorage()}
+        color='yellow'
+      >Reset Settings
+      </Button>
+    </View>
+
   </View>
 }
 
-const ClearStorage = () => {
-  const ClearAsync = async () => {
-    await AsyncStorage.setItem("difficulty","easy")
-    await AsyncStorage.setItem("difficultyoffset","100")
-    await AsyncStorage.setItem("difficultyrange","300")
-    await AsyncStorage.setItem("timer","10")
-  }
-  return <View style={styles.buttoncontainer}>
-    <Button
-    mode='contained'
-    onPress={()=> ClearAsync()}
-    color='yellow'
-    >Reset Settings</Button>
-  </View>
-}
+
 
 export default function Settings() {
   return (
@@ -141,11 +130,8 @@ export default function Settings() {
           <Text style={styles.textstylemain}>Settings</Text>
         </View>
         <Text></Text>
-        <Difficulty />
+        <Options />
         <Text></Text>
-        <Timer />
-        <Text></Text>
-        <ClearStorage/>
       </View>
     </LinearGradient>
   );
