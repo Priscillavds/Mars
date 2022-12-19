@@ -6,10 +6,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useState, useContext } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
-import { ProfielenNavigation } from "./profiel/profielNavigation"
+import { ProfielenNavigation } from "./profiel/profielNavigation";
 import { Quiz } from './quiz/quiz';
 
 interface Profiel {
@@ -63,8 +64,21 @@ const profielen: Profiel[] = [
 const Tab = createBottomTabNavigator();
 
 function App() {
+  const [settingsLoaded,setSettingsLoaded] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<number>(0);
   const [profiels, setProfiels] = useState<Profiel[]>(profielen);
+
+  const LoadSettingsIntoAsyncStorage = async () => {
+    let timer = await AsyncStorage.getItem("timer");
+    let difficulty = await AsyncStorage.getItem("difficulty");
+    if (timer == null || difficulty == null) {
+      await AsyncStorage.setItem("timer", "10");
+      await AsyncStorage.setItem("difficulty","easy");
+    }
+    setSettingsLoaded(true);
+  }
+
+  if (!settingsLoaded) LoadSettingsIntoAsyncStorage();
 
   const getProfiel = (id: number): Profiel | null => {
     let result: Profiel | null = null;
