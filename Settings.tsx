@@ -10,13 +10,13 @@ const Options = () => {
   const [timer, setTimer] = useState<number>(10);
 
   const loadData = async () => {
-    let time: any = await AsyncStorage.getItem("timer");
+    let storedTime: any = await AsyncStorage.getItem("timer");
     let storedDiff: any = await AsyncStorage.getItem("difficulty");
 
-    if (time == null) {
+    if (storedTime == null || storedDiff == null) {
       setDataLoaded(true);
     } else {
-      setTimer(parseInt(time))
+      setTimer(parseInt(storedTime))
       DifficultySetter(storedDiff);
       setDataLoaded(true);
     }
