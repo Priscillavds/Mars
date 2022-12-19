@@ -10,7 +10,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
-import { ProfielenNavigation } from "./profiel/profielNavigation"
+import { ProfielenNavigation } from "./profiel/profielNavigation";
+import { Quiz } from './quiz/quiz';
 
 interface Profiel {
   id: number,
