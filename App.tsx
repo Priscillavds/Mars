@@ -10,6 +10,7 @@ import React, { useState, useContext } from "react";
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
 import { ProfielenNavigation } from "./profiel/profielNavigation"
+import { Quiz } from './quiz/quiz';
 
 interface Profiel {
   id: number,
@@ -142,6 +143,11 @@ function App() {
 
       >
         <Tab.Screen name="Home" component={HomeScreen} options={{
+          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
+        }} />
+        <Tab.Screen name="Quiz" component={Quiz} 
+        initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel, playerId: playerId }}
+        options={{
           tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
         }} />
         <Tab.Screen name="Profiels" component={ProfielenNavigation}
