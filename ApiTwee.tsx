@@ -15,7 +15,6 @@ export interface ResponseResult {
     isNiche:          boolean;
 }
 
-
 const Quiz = () => {
   //const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState("");
@@ -39,17 +38,28 @@ const Quiz = () => {
   }
   loadData();
   },[newQuestions])
-  const allQuestions = [{answers}, ...wrongAnswers];
-  const index = Math.floor(Math.random() * allQuestions.length);
+  const allQuestions = [answers, ...wrongAnswers];
+
+  let shuffled = allQuestions
+  .map(value => ({ value, sort: Math.random() }))
+  .sort((a, b) => a.sort - b.sort)
+  .map(({ value }) => value)
+ 
+
   return (
-      <>
-      <div>{questions}</div>
-      <button>{answers}</button><br />
+      /*<button>{answers}</button><br />
       <button>{wrongAnswers[0]}</button><br />
       <button>{wrongAnswers[1]}</button><br />
-      <button>{wrongAnswers[2]}</button><br />
+      <button>{wrongAnswers[2]}</button><br />*/
+      <>
+      <div>{questions}</div>
+      <button>{shuffled[0]}</button><br />
+      <button>{shuffled[1]}</button> <br />
+      <button>{shuffled[2]}</button> <br />
+      <button>{shuffled[3]}</button> <br />
       <button onClick={() => setNewQuestions(newQuestions + 1)}>Next</button>
-      <button>allQuestions[index]</button>
+      
+      
       </>
     )
 }
