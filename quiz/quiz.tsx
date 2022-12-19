@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
 import { Button } from '../algemeen/button'
 import Constants from "expo-constants";
 import React, { useState, useContext, useEffect } from "react";
+import { normalTextSize } from '../profiel/styleProfiel';
 
 interface Profiel {
     id: number,
@@ -25,29 +26,7 @@ interface Queistion {
     isNiche: boolean;
 }
 
-const questions: Queistion[] = [{
-    id: "",
-    category: "",
-    correctAnswer: "A",
-    incorrectAnswers: ["B", "C", "D"],
-    question: "Press A",
-    tags: [],
-    type: "",
-    difficulty: "",
-    regions: [],
-    isNiche: false,
-}, {
-    id: "",
-    category: "",
-    correctAnswer: "B",
-    incorrectAnswers: ["A", "C"],
-    question: "Press B",
-    tags: [],
-    type: "",
-    difficulty: "",
-    regions: [],
-    isNiche: false,
-}]
+let questions: Queistion[] = [{ "category": "Film & TV", "id": "622a1c367cc59eab6f9501d8", "correctAnswer": "Barry Sonnenfeld", "incorrectAnswers": ["Steven Spielberg", "Woody Allen", "Martin Scorsese"], "question": "Which director directed Men in Black?", "tags": ["film_and_tv"], "type": "Multiple Choice", "difficulty": "hard", "regions": [], "isNiche": false }];
 
 export const Quiz = ({ route }: { route: any }) => {
     const profiel: Profiel = route.params.getProfiel(route.params.playerId);
@@ -56,13 +35,16 @@ export const Quiz = ({ route }: { route: any }) => {
     const [ansewers, setAnsewers] = useState<JSX.Element[]>([]);
     const [time, setTime] = useState<number>(0);
     const [message, setMessage] = useState<string | null>(null);
-    const maxTime = 10;
+    const maxTime = 50;
 
-    const loadMoreQuestion = () => {
+    const loadMoreQuestion = async () => {
 
-        console.log("Loading")
+        const result: Response = await fetch("https://the-trivia-api.com/api/questions?limit=5");
+        questions = await result.json();
 
     }
+
+    useEffect(() => { loadMoreQuestion() }, []);
 
     const nextQuestion = () => {
         setQuestionIndex(questionIndex => {
@@ -109,17 +91,16 @@ export const Quiz = ({ route }: { route: any }) => {
     }
 
     const wrongAnswer = (boodschap: string) => {
-        
-            setMessage(message => {
-                if (message == null) {
-                    route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong + 1, correct: profiel.correct, imgUri: profiel.imgUri })
-                    console.log(boodschap)
-                    return boodschap;
 
-                }
-                return message;
-            })
-        
+        setMessage(message => {
+            if (message == null) {
+                route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong + 1, correct: profiel.correct, imgUri: profiel.imgUri })
+                return boodschap;
+
+            }
+            return message;
+        })
+
     }
 
     useEffect(() => {
@@ -143,22 +124,39 @@ export const Quiz = ({ route }: { route: any }) => {
 
     return (
         <View style={styles.container}>
-
-            <Text>{question?.question}</Text>
-            {ansewers.map((element: JSX.Element) => element)}
-            {!message && <Text>{time} / {maxTime}</Text>}
-            {message && <>
-                {message.startsWith("C") ?
-                    <Text> {message}</Text> :
-                    <Text> {message} Correct answer {question?.correctAnswer}</Text>}
-                <Button
-                    func={() => { nextQuestion(); }}
-                    name="Next"
-                    backColor="red"
-                    borderColor="red"
-                    textColor="white"
-                ></Button>
-            </>}
+            <View style={styles.profiel}>
+                <Text style={{ fontSize: normalTextSize * .5 }}>{profiel.name}</Text>
+            </View>
+            <View style={styles.header}>
+                <Text style={styles.title}>{question?.question}</Text>
+            </View>
+            <View style={styles.main}>
+                {ansewers.map((element: JSX.Element, index: number) => <View key={index} style={styles.buttonContainer}>{element}</View>)}
+            </View>
+            <View style={styles.footer}>
+                {!message &&
+                    <View style={styles.timeBar}>
+                        <View style={[styles.bar, { width: `${(maxTime - time) * (100 / maxTime)}%` }]}></View>
+                        <Text style={styles.timeText}>{maxTime - time}</Text>
+                    </View>}
+                {message && <>
+                    {message.startsWith("C") ?
+                        <Text style={[styles.text, { color: "green" }]}> {message}</Text> :
+                        <>
+                            <Text style={[styles.text, { color: "red" }]}> {message} </Text>
+                            <Text style={[styles.text, { color: "red" }]}> Correct answer {question?.correctAnswer}</Text>
+                        </>}
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            func={() => { nextQuestion(); }}
+                            name="Next"
+                            backColor="red"
+                            borderColor="red"
+                            textColor="white"
+                        ></Button>
+                    </View>
+                </>}
+            </View>
         </View>
     )
 }
@@ -170,5 +168,77 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#ffb7b2"
     },
+
+    profiel: {
+        height: normalTextSize,
+        justifyContent: 'center',
+        alignItems: "center",
+        backgroundColor: "lightblue"
+    },
+
+    title: {
+        fontSize: normalTextSize,
+        textAlign: "center",
+        color: "red"
+    },
+
+    header: {
+        height: "20%",
+        justifyContent: "center",
+    },
+
+    main: {
+        height: "45%",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    footer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    buttonContainer: {
+        marginTop: normalTextSize,
+        width: "70%",
+    },
+
+    text: {
+        fontSize: normalTextSize,
+        textAlign: "center"
+    },
+
+    timeBar: {
+        position: "relative",
+        borderColor: "red",
+        borderStyle: "solid",
+        borderWidth: normalTextSize * .25,
+        width: "80%",
+        height: normalTextSize * 1.75,
+        borderRadius: 100000,
+        overflow: "hidden"
+    },
+
+    timeText: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        textAlign: "center",
+        color: "white",
+        fontSize: normalTextSize * .75
+
+    },
+
+    bar: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        backgroundColor: "red",
+        width: "100%",
+        height: "200%",
+    }
 
 });
