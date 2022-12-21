@@ -45,7 +45,7 @@ export const Edit = ({ profiel, color, total, procent, setSure, name, setName, i
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
-        let result: any = await ImagePicker.launchImageLibraryAsync({
+        let result: ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
@@ -68,7 +68,7 @@ export const Edit = ({ profiel, color, total, procent, setSure, name, setName, i
                     <Image style={styles.img} source={require("../NoImg.png")} />
                 }
                 <Button func={() => { pickImage() }} name="Edit" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                {imgUri && <Button func={() => { SetImgUri("") }} name="Remove" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button> }
+                {imgUri && <Button func={() => { SetImgUri("") }} name="Remove" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>}
             </View>
             <TextInput style={styles.input} value={name} onChangeText={text => setName(text)} />
         </View>
