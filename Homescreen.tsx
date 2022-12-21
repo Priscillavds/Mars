@@ -29,6 +29,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        fontSize: '10rem',
         backgroundColor: '#ffb7b2',
         alignItems: 'center',
         justifyContent: 'center',
@@ -39,18 +40,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#ff4032'
     },
     text: {
-        color: '#AD2B2B'
+        fontSize: 18,
+        color: '#AD2B2B',
+        paddingBottom:20
+        
     },
     buttontext: {
         color: 'white'
     },
     title: {
-        fontSize: 32,
+        fontSize: 40,
         color: '#ff1100',
-        
+        paddingBottom:20
     },
     image: {
         width: 10,
+        paddingBottom:20
     },
     tinyLogo: {
         width:'95%',
@@ -58,5 +63,4 @@ const styles = StyleSheet.create({
         
     }
 });
-
 export default HomeScreen

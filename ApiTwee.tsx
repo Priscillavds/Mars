@@ -28,7 +28,7 @@ const Quiz = () => {
     
      // setLoading(true);
       
-      const result: Response = await fetch("https://the-trivia-api.com/api/questions?limit=5"); 
+      const result = await fetch("https://the-trivia-api.com/api/questions?limit=5"); 
       const json : ResponseResult[]= await result.json();
       setQuestions(json[0].question);
       setAnswers(json[0].correctAnswer)
@@ -40,7 +40,7 @@ const Quiz = () => {
   },[newQuestions])
   const allQuestions = [answers, ...wrongAnswers];
 
-  let shuffled: string[] = allQuestions
+  let shuffled = allQuestions
   .map(value => ({ value, sort: Math.random() }))
   .sort((a, b) => a.sort - b.sort)
   .map(({ value }) => value)
