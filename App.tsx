@@ -64,16 +64,16 @@ const profielen: Profiel[] = [
 const Tab = createBottomTabNavigator();
 
 function App() {
-  const [settingsLoaded,setSettingsLoaded] = useState<boolean>(false);
+  const [settingsLoaded, setSettingsLoaded] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<number>(0);
   const [profiels, setProfiels] = useState<Profiel[]>(profielen);
 
   const LoadSettingsIntoAsyncStorage = async () => {
-    let timer = await AsyncStorage.getItem("timer");
-    let difficulty = await AsyncStorage.getItem("difficulty");
+    let timer: string | null = await AsyncStorage.getItem("timer");
+    let difficulty: string | null = await AsyncStorage.getItem("difficulty");
     if (timer == null || difficulty == null) {
       await AsyncStorage.setItem("timer", "10");
-      await AsyncStorage.setItem("difficulty","easy");
+      await AsyncStorage.setItem("difficulty", "easy");
     }
     setSettingsLoaded(true);
   }
@@ -159,11 +159,11 @@ function App() {
         <Tab.Screen name="Home" component={HomeScreen} options={{
           tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
         }} />
-        <Tab.Screen name="Quiz" component={Quiz} 
-        initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel, playerId: playerId }}
-        options={{
-          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
-        }} />
+        <Tab.Screen name="Quiz" component={Quiz}
+          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel, playerId: playerId }}
+          options={{
+            tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
+          }} />
         <Tab.Screen name="Profiels" component={ProfielenNavigation}
           initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, playerId: playerId, setPlayer: setPlayer }}
           options={{
