@@ -21,9 +21,7 @@
     "react-native": "^0.70.5",
     "react-native-restart": "^0.0.24",
     "react-native-tab-view": "^3.3.0",
-
     "react-native-web": "~0.18.9"
-
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from '../algemeen/button'
 import Constants from "expo-constants";
 import React, { useState, useContext, useEffect } from "react";
@@ -29,17 +30,38 @@ interface Queistion {
 let questions: Queistion[] = [{ "category": "Film & TV", "id": "622a1c367cc59eab6f9501d8", "correctAnswer": "Barry Sonnenfeld", "incorrectAnswers": ["Steven Spielberg", "Woody Allen", "Martin Scorsese"], "question": "Which director directed Men in Black?", "tags": ["film_and_tv"], "type": "Multiple Choice", "difficulty": "hard", "regions": [], "isNiche": false }];
 
 export const Quiz = ({ route }: { route: any }) => {
-    const profiel: Profiel = route.params.getProfiel(route.params.playerId);
+    
     const [questionIndex, setQuestionIndex] = useState<number>(0);
     const [question, setQuestion] = useState<Queistion>();
     const [ansewers, setAnsewers] = useState<JSX.Element[]>([]);
     const [time, setTime] = useState<number>(0);
     const [message, setMessage] = useState<string | null>(null);
-    const maxTime = 50;
+
+    const [timer, setTimer] = useState<number>(10);
+    const [difficulty, setDifficulty] = useState<string>("easy")
+    const [player,setPlayer] = useState<number>(2);
+    const profiel: Profiel = route.params.getProfiel(player);
+
+    const LoadData = async () => {
+        let loadTimer: string | null = await AsyncStorage.getItem("timer");
+        let loadDifficulty: string | null = await AsyncStorage.getItem("difficulty");
+        let loadPlayer: string | null = await AsyncStorage.getItem("player");
+
+        if (loadTimer != null) setTimer(parseInt(loadTimer));
+        if (loadPlayer != null) setPlayer(parseInt(loadPlayer));
+        if (loadDifficulty != null) setDifficulty(loadDifficulty); 
+    }
+
+    LoadData()
 
     const loadMoreQuestion = async () => {
+        let localDifficulty = "easy";
 
-        const result: Response = await fetch("https://the-trivia-api.com/api/questions?limit=5");
+        if (difficulty == "normal") localDifficulty = "medium";
+
+        if (difficulty == "hard") localDifficulty = "hard";
+
+        const result: Response = await fetch("https://the-trivia-api.com/api/questions?limit=5&difficulty=" + localDifficulty);
         questions = await result.json();
 
     }
@@ -111,7 +133,7 @@ export const Quiz = ({ route }: { route: any }) => {
     useEffect(() => {
         let handle = setInterval(() => {
             setTime(time => {
-                if (time >= maxTime) { wrongAnswer("Time up"); return 0 }
+                if (time >= timer) { wrongAnswer("Time up"); return 0 }
                 return time + 1
             });
 
@@ -136,8 +158,8 @@ export const Quiz = ({ route }: { route: any }) => {
             <View style={styles.footer}>
                 {!message &&
                     <View style={styles.timeBar}>
-                        <View style={[styles.bar, { width: `${(maxTime - time) * (100 / maxTime)}%` }]}></View>
-                        <Text style={styles.timeText}>{maxTime - time}</Text>
+                        <View style={[styles.bar, { width: `${(timer - time) * (100 / timer)}%` }]}></View>
+                        <Text style={styles.timeText}>{timer - time}</Text>
                     </View>}
                 {message && <>
                     {message.startsWith("C") ?

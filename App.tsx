@@ -5,12 +5,17 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
 import { ProfielenNavigation } from "./profiel/profielNavigation"
 import { Quiz } from './quiz/quiz';
+
+interface ProfielObject {
+  profiels: Profiel[]
+}
 
 interface Profiel {
   id: number,
@@ -20,51 +25,93 @@ interface Profiel {
   imgUri?: string
 }
 
-const profielen: Profiel[] = [
-  {
-    id: 0,
-    name: "Joris en de draak",
-    wrong: 10,
-    correct: 5
-  },
-  {
-    id: 1,
-    name: "Kondaa",
-    wrong: 5,
-    correct: 10
-  },
-  {
-    id: 2,
-    name: "The ride to hapiness by tomorrowland",
-    wrong: 50,
-    correct: 100
-  }
-  ,
-  {
-    id: 3,
-    name: "Revolution",
-    wrong: 0,
-    correct: 0
-  },
-  {
-    id: 4,
-    name: "Falcon",
-    wrong: 10,
-    correct: 5
-  },
-  {
-    id: 5,
-    name: "De smurfer",
-    wrong: 0,
-    correct: 5
-  },
-];
+const profielen: ProfielObject = {
+  profiels: [
+    {
+      id: 0,
+      name: "Joris en de draak",
+      wrong: 10,
+      correct: 5
+    },
+    {
+      id: 1,
+      name: "Kondaa",
+      wrong: 5,
+      correct: 10
+    },
+    {
+      id: 2,
+      name: "The ride to hapiness by tomorrowland",
+      wrong: 50,
+      correct: 100
+    }
+    ,
+    {
+      id: 3,
+      name: "Revolution",
+      wrong: 0,
+      correct: 0
+    },
+    {
+      id: 4,
+      name: "Falcon",
+      wrong: 10,
+      correct: 5
+    },
+    {
+      id: 5,
+      name: "De smurfer",
+      wrong: 0,
+      correct: 5
+    },
+  ]
+};
 
 const Tab = createBottomTabNavigator();
 
 function App() {
-  const [playerId, setPlayerId] = useState<number>(0);
-  const [profiels, setProfiels] = useState<Profiel[]>(profielen);
+  const [settingsLoaded, setSettingsLoaded] = useState<boolean>(false);
+  const [player, setPlayer] = useState<number>(0);
+  const [profiels, setProfiels] = useState<Profiel[]>([]);
+
+  const LoadDataIntoAsyncStorage = async () => {
+    let timer: string | null = await AsyncStorage.getItem("timer");
+    let difficulty: string | null = await AsyncStorage.getItem("difficulty");
+    let player: string | null = await AsyncStorage.getItem("player");
+    let profiels: string | null = await AsyncStorage.getItem("profiels");
+    if (timer == null || difficulty == null) {
+      await AsyncStorage.setItem("timer", "10");
+      await AsyncStorage.setItem("difficulty", "easy");
+    }
+    if (player == null) await AsyncStorage.setItem("player", "0");
+    if (profiels == null) await AsyncStorage.setItem("profiels", JSON.stringify(profielen));
+    setSettingsLoaded(true);
+  }
+
+  if (!settingsLoaded) LoadDataIntoAsyncStorage();
+
+  const LoadPlayer = async () => {
+    let loadPlayer: string | null = await AsyncStorage.getItem("player");
+
+    if (loadPlayer != null) setPlayer(parseInt(loadPlayer));
+
+  }
+
+  LoadPlayer();
+
+  useEffect(() => {
+    const LoadProfiels = async () => {
+      let loadProfiels: string | null = await AsyncStorage.getItem("profiels");
+
+      if (loadProfiels != null) {
+        let loadProfielsList = [...JSON.parse(loadProfiels).profiels]
+        loadProfielsList.forEach((p: Profiel) => profiels.push(p));
+        setProfiels([...profiels]);
+      }
+      // = [...JSON.parse(loadProfiels).profiels]
+    }
+    LoadProfiels();
+  }, [])
 
   const getProfiel = (id: number): Profiel | null => {
     let result: Profiel | null = null;
@@ -86,9 +133,8 @@ function App() {
     return result;
   }
 
-  const updateProfiel = (id: number, newProfiel: Profiel): void => {
+  const updateProfiel = async (id: number, newProfiel: Profiel) => {
 
-    setPlayer(3);
     let oldProfiel: Profiel | null = getProfiel(id);
     if (oldProfiel == null) { return }
 
@@ -98,38 +144,41 @@ function App() {
     oldProfiel.imgUri = newProfiel.imgUri;
 
     setProfiels([...profiels]);
+    await AsyncStorage.setItem("profiels", JSON.stringify({ profiels: profiels }));
   }
 
-  const deleteProfiel = (id: number): void => {
+  const deleteProfiel = async (id: number) => {
     let index: number | null = getProfielIndex(id);
     if (index == null || profiels.length <= 1) { return; }
 
-    if (profiels[index].id == playerId) {
+    if (profiels[index].id == player) {
       profiels.splice(index, 1);
-      setPlayer(3); // NOG AANPASSEN ANY
-      setProfiels([...profiels]);
-    } else {
+      updatePlayer(profiels[0].id);
+    }else {
       profiels.splice(index, 1);
-      setProfiels([...profiels]);
     }
+
+    
+    setProfiels([...profiels]);
+    await AsyncStorage.setItem("profiels", JSON.stringify({ profiels: profiels }));
   }
 
-  const newProfiel = (newProfiel: Profiel): Profiel => {
+  const newProfiel = (newProfiel: Profiel) => {
     let newId: number = profiels[profiels.length - 1].id + 1;
 
     newProfiel.id = newId;
     profiels.push(newProfiel)
 
     setProfiels([...profiels]);
-
+    updateProfiel(newProfiel.id, newProfiel)
     return newProfiel;
   }
 
-  const setPlayer = (id: number): void => {
+  const updatePlayer = async (id: number) => {
     let index: number | null = getProfielIndex(id);
     if (index == null) { return; }
 
-    setPlayerId(id);
+    await AsyncStorage.setItem("player", id.toString())
   }
 
   return (
@@ -145,13 +194,13 @@ function App() {
         <Tab.Screen name="Home" component={HomeScreen} options={{
           tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
         }} />
-        <Tab.Screen name="Quiz" component={Quiz} 
-        initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel, playerId: playerId }}
-        options={{
-          tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
-        }} />
+        <Tab.Screen name="Quiz" component={Quiz}
+          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel }}
+          options={{
+            tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
+          }} />
         <Tab.Screen name="Profiels" component={ProfielenNavigation}
-          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, playerId: playerId, setPlayer: setPlayer }}
+          initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, updatePlayer: updatePlayer }}
           options={{
             tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color}
             />,
