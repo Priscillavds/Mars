@@ -5,9 +5,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Options = () => {
-  const [diff, setDiff] = useState<string>("easy");
+  const [diff, setDiff] = useState<string>("");
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(10);
+  const [timer, setTimer] = useState<number>(0);
 
   const loadData = async () => {
     let storedTime: string | null = await AsyncStorage.getItem("timer");
@@ -35,9 +35,10 @@ const Options = () => {
   }
 
   const ResetStorage = async () => {
-    await AsyncStorage.clear();
-    changeTimer(10);
-    DifficultySetter("easy");
+    await AsyncStorage.removeItem("difficulty");
+    await AsyncStorage.removeItem("timer");
+    await changeTimer(10);
+    await DifficultySetter("easy");
   }
 
   return <View style={styles.buttoncontainer}>
