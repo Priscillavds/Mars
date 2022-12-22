@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Keyboard } from 'react-native';
 import Constants from "expo-constants";
+import { LinearGradient } from "expo-linear-gradient";
 
 import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
 import { Detail } from "./detail";
@@ -93,10 +94,13 @@ export const styles = StyleSheet.create({
     bottom: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: darkBlue,
+        backgroundColor: 'transparent',
         padding: normalTextSize,
         paddingBottom: normalTextSize / 2,
         paddingTop: normalTextSize / 2
+    },
+    gradient: {
+        height:'60%'
     },
     procent: {
         height: "42.5%",
