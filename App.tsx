@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Pressable, Alert, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Alert, Button, Image, LogBox } from 'react-native';
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 //import { createDrawerNavigator } from "@react-navigation/drawer";
 import { FontAwesome } from "@expo/vector-icons";
@@ -12,6 +12,11 @@ import Settings from './Settings';
 import HomeScreen from './Homescreen';
 import { ProfielenNavigation } from "./profiel/profielNavigation"
 import { Quiz } from './quiz/quiz';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+  'equire cycle:'
+]);
 
 interface ProfielObject {
   profiels: Profiel[]
@@ -29,41 +34,11 @@ const profielen: ProfielObject = {
   profiels: [
     {
       id: 0,
-      name: "Joris en de draak",
-      wrong: 10,
-      correct: 5
-    },
-    {
-      id: 1,
-      name: "Kondaa",
-      wrong: 5,
-      correct: 10
-    },
-    {
-      id: 2,
-      name: "The ride to hapiness by tomorrowland",
-      wrong: 50,
-      correct: 100
-    }
-    ,
-    {
-      id: 3,
-      name: "Revolution",
+      name: "New Player",
       wrong: 0,
       correct: 0
     },
-    {
-      id: 4,
-      name: "Falcon",
-      wrong: 10,
-      correct: 5
-    },
-    {
-      id: 5,
-      name: "De smurfer",
-      wrong: 0,
-      correct: 5
-    },
+
   ]
 };
 
@@ -147,12 +122,13 @@ function App() {
     await AsyncStorage.setItem("profiels", JSON.stringify({ profiels: profiels }));
   }
 
-  const deleteProfiel = async (id: number) => {
+  const deleteProfiel = async (id: number,check:boolean) => {
+
     let index: number | null = getProfielIndex(id);
     if (index == null || profiels.length <= 1) { return; }
 
-    if (profiels[index].id == player) {
-      profiels.splice(index, 1);
+    if (check) {
+      profiels.splice(index, 1);   
       updatePlayer(profiels[0].id);
     }else {
       profiels.splice(index, 1);

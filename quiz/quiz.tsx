@@ -27,10 +27,10 @@ interface Queistion {
     isNiche: boolean;
 }
 
-let questions: Queistion[] = [{ "category": "Film & TV", "id": "622a1c367cc59eab6f9501d8", "correctAnswer": "Barry Sonnenfeld", "incorrectAnswers": ["Steven Spielberg", "Woody Allen", "Martin Scorsese"], "question": "Which director directed Men in Black?", "tags": ["film_and_tv"], "type": "Multiple Choice", "difficulty": "hard", "regions": [], "isNiche": false }];
+let questions: Queistion[] = [];
 
 export const Quiz = ({ route }: { route: any }) => {
-    
+
     const [questionIndex, setQuestionIndex] = useState<number>(0);
     const [question, setQuestion] = useState<Queistion>();
     const [ansewers, setAnsewers] = useState<JSX.Element[]>([]);
@@ -39,7 +39,8 @@ export const Quiz = ({ route }: { route: any }) => {
 
     const [timer, setTimer] = useState<number>(10);
     const [difficulty, setDifficulty] = useState<string>("easy")
-    const [player,setPlayer] = useState<number>(2);
+    const [player, setPlayer] = useState<number>(2);
+
     const profiel: Profiel = route.params.getProfiel(player);
 
     const LoadData = async () => {
@@ -49,12 +50,12 @@ export const Quiz = ({ route }: { route: any }) => {
 
         if (loadTimer != null) setTimer(parseInt(loadTimer));
         if (loadPlayer != null) setPlayer(parseInt(loadPlayer));
-        if (loadDifficulty != null) setDifficulty(loadDifficulty); 
+        if (loadDifficulty != null) setDifficulty(loadDifficulty);
     }
 
     LoadData()
 
-    const loadMoreQuestion = async () => {
+    const loadMoreQuestion = async (first: boolean) => {
         let localDifficulty = "easy";
 
         if (difficulty == "normal") localDifficulty = "medium";
@@ -64,13 +65,15 @@ export const Quiz = ({ route }: { route: any }) => {
         const result: Response = await fetch("https://the-trivia-api.com/api/questions?limit=5&difficulty=" + localDifficulty);
         questions = await result.json();
 
+        if (first) setupQuestion()
+
     }
 
-    useEffect(() => { loadMoreQuestion() }, []);
+    useEffect(() => { loadMoreQuestion(true) }, []);
 
     const nextQuestion = () => {
         setQuestionIndex(questionIndex => {
-            if ((questionIndex + 1) >= questions.length) { loadMoreQuestion(); return 0; }
+            if ((questionIndex + 1) >= questions.length) { loadMoreQuestion(false); return 0; }
             return questionIndex + 1
         });
     }
@@ -109,13 +112,15 @@ export const Quiz = ({ route }: { route: any }) => {
             if (message == null) { return "Correct answer" }
             return message
         })
-        route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong, correct: profiel.correct + 1, imgUri: profiel.imgUri })
+        if (profiel) {
+            route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong, correct: profiel.correct + 1, imgUri: profiel.imgUri })
+        }
     }
 
     const wrongAnswer = (boodschap: string) => {
 
         setMessage(message => {
-            if (message == null) {
+            if (message == null && profiel) {
                 route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong + 1, correct: profiel.correct, imgUri: profiel.imgUri })
                 return boodschap;
 
@@ -126,7 +131,9 @@ export const Quiz = ({ route }: { route: any }) => {
     }
 
     useEffect(() => {
-        setupQuestion();
+        if (questions.length > 0) {
+            setupQuestion();
+        }
     }, [questionIndex]);
 
 
@@ -147,16 +154,19 @@ export const Quiz = ({ route }: { route: any }) => {
     return (
         <View style={styles.container}>
             <View style={styles.profiel}>
-                <Text style={{ fontSize: normalTextSize * .5 }}>{profiel.name}</Text>
+                <Text style={{ fontSize: normalTextSize * .5 }}>{profiel?.name}</Text>
             </View>
             <View style={styles.header}>
-                <Text style={styles.title}>{question?.question}</Text>
+                {question ?
+                    <Text style={styles.title}>{question.question}</Text> :
+                    <Text style={styles.title}>Loading</Text>
+                }
             </View>
             <View style={styles.main}>
                 {ansewers.map((element: JSX.Element, index: number) => <View key={index} style={styles.buttonContainer}>{element}</View>)}
             </View>
             <View style={styles.footer}>
-                {!message &&
+                {!message && question &&
                     <View style={styles.timeBar}>
                         <View style={[styles.bar, { width: `${(timer - time) * (100 / timer)}%` }]}></View>
                         <Text style={styles.timeText}>{timer - time}</Text>

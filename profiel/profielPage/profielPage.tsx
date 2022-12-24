@@ -56,7 +56,7 @@ export const ProfielPage = ({ route, navigation }: { route: any, navigation: any
             {edit ?
                 <Edit profiel={profiel} color={color} total={total} procent={procent} setSure={setSure} name={name} setName={SetName} imgUri={imgUri} SetImgUri={SetImgUri} ></Edit> :
                 <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} player={player} updatePlayer={updatePlayer} reload={reload} setReload={setReload}></Profiel>}
-            {sure && <AreYouSure profiel={profiel} updateProfiel={updateProfiel} deleteProfiel={deleteProfiel} sure={sure} setSure={setSure} setEdit={setEdit} name={name} navigation={navigation} imgUri={imgUri}></AreYouSure>}
+            {sure && <AreYouSure profiel={profiel} updateProfiel={updateProfiel} deleteProfiel={deleteProfiel} sure={sure} setSure={setSure} setEdit={setEdit} name={name} navigation={navigation} check={player == profiel.id} imgUri={imgUri}></AreYouSure>}
         </View>
     )
 }
