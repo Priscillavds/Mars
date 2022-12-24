@@ -1,8 +1,11 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from '../algemeen/button'
 import Constants from "expo-constants";
 import React, { useState, useContext, useEffect } from "react";
+import { normalTextSize } from '../profiel/styleProfiel';
 
 interface Profiel {
     id: number,
@@ -25,48 +28,53 @@ interface Queistion {
     isNiche: boolean;
 }
 
-const questions: Queistion[] = [{
-    id: "",
-    category: "",
-    correctAnswer: "A",
-    incorrectAnswers: ["B", "C", "D"],
-    question: "Press A",
-    tags: [],
-    type: "",
-    difficulty: "",
-    regions: [],
-    isNiche: false,
-}, {
-    id: "",
-    category: "",
-    correctAnswer: "B",
-    incorrectAnswers: ["A", "C"],
-    question: "Press B",
-    tags: [],
-    type: "",
-    difficulty: "",
-    regions: [],
-    isNiche: false,
-}]
+let questions: Queistion[] = [];
 
 export const Quiz = ({ route }: { route: any }) => {
-    const profiel: Profiel = route.params.getProfiel(route.params.playerId);
+
     const [questionIndex, setQuestionIndex] = useState<number>(0);
     const [question, setQuestion] = useState<Queistion>();
     const [ansewers, setAnsewers] = useState<JSX.Element[]>([]);
     const [time, setTime] = useState<number>(0);
     const [message, setMessage] = useState<string | null>(null);
-    const maxTime = 10;
 
-    const loadMoreQuestion = () => {
+    const [timer, setTimer] = useState<number>(10);
+    const [difficulty, setDifficulty] = useState<string>("easy")
+    const [player, setPlayer] = useState<number>(2);
 
-        console.log("Loading")
+    const profiel: Profiel = route.params.getProfiel(player);
+
+    const LoadData = async () => {
+        let loadTimer: string | null = await AsyncStorage.getItem("timer");
+        let loadDifficulty: string | null = await AsyncStorage.getItem("difficulty");
+        let loadPlayer: string | null = await AsyncStorage.getItem("player");
+
+        if (loadTimer != null) setTimer(parseInt(loadTimer));
+        if (loadPlayer != null) setPlayer(parseInt(loadPlayer));
+        if (loadDifficulty != null) setDifficulty(loadDifficulty);
+    }
+
+    LoadData()
+
+    const loadMoreQuestion = async (first: boolean) => {
+        let localDifficulty = "easy";
+
+        if (difficulty == "normal") localDifficulty = "medium";
+
+        if (difficulty == "hard") localDifficulty = "hard";
+
+        const result: Response = await fetch("https://the-trivia-api.com/api/questions?limit=5&difficulty=" + localDifficulty);
+        questions = await result.json();
+
+        if (first) setupQuestion()
 
     }
 
+    useEffect(() => { loadMoreQuestion(true) }, []);
+
     const nextQuestion = () => {
         setQuestionIndex(questionIndex => {
-            if ((questionIndex + 1) >= questions.length) { loadMoreQuestion(); return 0; }
+            if ((questionIndex + 1) >= questions.length) { loadMoreQuestion(false); return 0; }
             return questionIndex + 1
         });
     }
@@ -105,32 +113,35 @@ export const Quiz = ({ route }: { route: any }) => {
             if (message == null) { return "Correct answer" }
             return message
         })
-        route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong, correct: profiel.correct + 1, imgUri: profiel.imgUri })
+        if (profiel) {
+            route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong, correct: profiel.correct + 1, imgUri: profiel.imgUri })
+        }
     }
 
     const wrongAnswer = (boodschap: string) => {
-        
-            setMessage(message => {
-                if (message == null) {
-                    route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong + 1, correct: profiel.correct, imgUri: profiel.imgUri })
-                    console.log(boodschap)
-                    return boodschap;
 
-                }
-                return message;
-            })
-        
+        setMessage(message => {
+            if (message == null && profiel) {
+                route.params.updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: profiel.wrong + 1, correct: profiel.correct, imgUri: profiel.imgUri })
+                return boodschap;
+
+            }
+            return message;
+        })
+
     }
 
     useEffect(() => {
-        setupQuestion();
+        if (questions.length > 0) {
+            setupQuestion();
+        }
     }, [questionIndex]);
 
 
     useEffect(() => {
         let handle = setInterval(() => {
             setTime(time => {
-                if (time >= maxTime) { wrongAnswer("Time up"); return 0 }
+                if (time >= timer) { wrongAnswer("Time up"); return 0 }
                 return time + 1
             });
 
@@ -143,22 +154,42 @@ export const Quiz = ({ route }: { route: any }) => {
 
     return (
         <View style={styles.container}>
-
-            <Text>{question?.question}</Text>
-            {ansewers.map((element: JSX.Element) => element)}
-            {!message && <Text>{time} / {maxTime}</Text>}
-            {message && <>
-                {message.startsWith("C") ?
-                    <Text> {message}</Text> :
-                    <Text> {message} Correct answer {question?.correctAnswer}</Text>}
-                <Button
-                    func={() => { nextQuestion(); }}
-                    name="Next"
-                    backColor="red"
-                    borderColor="red"
-                    textColor="white"
-                ></Button>
-            </>}
+            <View style={styles.profiel}>
+                <Text style={{ fontSize: normalTextSize * .5 }}>{profiel?.name}</Text>
+            </View>
+            <View style={styles.header}>
+                {question ?
+                    <Text style={styles.title}>{question.question}</Text> :
+                    <Text style={styles.title}>Loading</Text>
+                }
+            </View>
+            <View style={styles.main}>
+                {ansewers.map((element: JSX.Element, index: number) => <View key={index} style={styles.buttonContainer}>{element}</View>)}
+            </View>
+            <View style={styles.footer}>
+                {!message && question &&
+                    <View style={styles.timeBar}>
+                        <View style={[styles.bar, { width: `${(timer - time) * (100 / timer)}%` }]}></View>
+                        <Text style={styles.timeText}>{timer - time}</Text>
+                    </View>}
+                {message && <>
+                    {message.startsWith("C") ?
+                        <Text style={[styles.text, { color: "green" }]}> {message}</Text> :
+                        <>
+                            <Text style={[styles.text, { color: "red" }]}> {message} </Text>
+                            <Text style={[styles.text, { color: "red" }]}> Correct answer {question?.correctAnswer}</Text>
+                        </>}
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            func={() => { nextQuestion(); }}
+                            name="Next"
+                            backColor="red"
+                            borderColor="red"
+                            textColor="white"
+                        ></Button>
+                    </View>
+                </>}
+            </View>
         </View>
     )
 }
@@ -170,5 +201,78 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#ffb7b2"
     },
+
+    profiel: {
+        height: normalTextSize,
+        justifyContent: 'center',
+        alignItems: "center",
+        backgroundColor: "lightblue"
+    },
+
+    title: {
+        fontSize: normalTextSize,
+        textAlign: "center",
+        color: "red"
+    },
+
+    header: {
+        height: "20%",
+        justifyContent: "center",
+    },
+
+    main: {
+        height: "45%",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+
+    footer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    buttonContainer: {
+        marginTop: normalTextSize,
+        width: "70%",
+    },
+
+    text: {
+        fontSize: normalTextSize,
+        textAlign: "center"
+    },
+
+    timeBar: {
+        position: "relative",
+        borderColor: "red",
+        borderStyle: "solid",
+        borderWidth: normalTextSize * .25,
+        width: "80%",
+        height: normalTextSize * 1.75,
+        borderRadius: 100000,
+        overflow: "hidden"
+    },
+
+    timeText: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        textAlign: "center",
+        color: "white",
+        fontSize: normalTextSize * .75
+
+    },
+
+    bar: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        backgroundColor: "red",
+        width: "100%",
+        height: "200%",
+    }
+
 
 });

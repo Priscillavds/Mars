@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Keyboard } from 'react-native';
 import Constants from "expo-constants";
@@ -9,6 +10,7 @@ import { useState,useEffect } from 'react';
 import { AreYouSure } from "./areYouSure";
 import { Profiel } from "./profiel";
 import { Edit } from "./edit";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 interface Profiel {
@@ -24,13 +26,23 @@ export const ProfielPage = ({ route, navigation }: { route: any, navigation: any
     const [sure, setSure] = useState<string>("");
     const [name, SetName] = useState<string>(route.params.profiel.name)
     const [imgUri, SetImgUri] = useState<string>(route.params.profiel.imgUri)
+    const [reload,setReload] = useState<boolean>(false);
+    const [player, setPlayer] = useState<number>(0);
 
     useEffect(() => {
         SetName(profiel.name);
         SetImgUri(profiel.imgUri);
     },[edit])
 
-    const { profiel, updateProfiel, deleteProfiel, playerId, setPlayer } = route.params;
+    const LoadPlayer = async () => {
+        let loadPlayer: string | null = await AsyncStorage.getItem("player");
+    
+        if (loadPlayer != null) setPlayer(parseInt(loadPlayer));
+      }
+    
+      LoadPlayer()
+    
+    const { profiel, updateProfiel, deleteProfiel, updatePlayer } = route.params;
 
     const total: number = profiel.correct + profiel.wrong;
     const procent: number = total == 0 ? 0 : Math.round((profiel.correct / total) * 100);
@@ -44,8 +56,8 @@ export const ProfielPage = ({ route, navigation }: { route: any, navigation: any
         <View style={styles.container}>
             {edit ?
                 <Edit profiel={profiel} color={color} total={total} procent={procent} setSure={setSure} name={name} setName={SetName} imgUri={imgUri} SetImgUri={SetImgUri} ></Edit> :
-                <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} playerId={playerId} setPlayer={setPlayer}></Profiel>}
-            {sure && <AreYouSure profiel={profiel} updateProfiel={updateProfiel} deleteProfiel={deleteProfiel} sure={sure} setSure={setSure} setEdit={setEdit} name={name} navigation={navigation} imgUri={imgUri}></AreYouSure>}
+                <Profiel profiel={profiel} color={color} total={total} procent={procent} navigation={navigation} setEdit={setEdit} player={player} updatePlayer={updatePlayer} reload={reload} setReload={setReload}></Profiel>}
+            {sure && <AreYouSure profiel={profiel} updateProfiel={updateProfiel} deleteProfiel={deleteProfiel} sure={sure} setSure={setSure} setEdit={setEdit} name={name} navigation={navigation} check={player == profiel.id} imgUri={imgUri}></AreYouSure>}
         </View>
     )
 }
@@ -152,4 +164,5 @@ export const styles = StyleSheet.create({
         marginLeft: normalTextSize,
         marginRight: normalTextSize,
     }
+
 });

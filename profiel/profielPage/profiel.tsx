@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Image } from 'react-native';
 import Constants from "expo-constants";
@@ -23,11 +24,14 @@ interface ProfielParm {
     procent: number,
     navigation: any,
     setEdit: { (edit: boolean): void },
-    playerId: number,
-    setPlayer: { (id: number): void }
+    player: number,
+    updatePlayer: { (id: number): void }
+    reload: boolean,
+    setReload: { (id: boolean): void }
 }
 
-export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, playerId, setPlayer }: ProfielParm) => {
+export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, player, updatePlayer,reload,setReload }: ProfielParm) => {
+    
     return (<>
         <View style={styles.top}>
             <View style={styles.imgContainer}>
@@ -50,12 +54,13 @@ export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, p
             </View>
             <View style={styles.opties}>
                 <Button func={() => { navigation.push('Profielen') }} name="Back" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                {playerId == profiel.id ?
+                {player == profiel.id ?
                     <Button func={() => { }} name="Selected" backColor={darkBlue} borderColor={darkBlue} textColor="lightgrey"></Button> :
-                    <Button func={() => { setPlayer(profiel.id); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                    <Button func={() => { updatePlayer(profiel.id); setReload(!reload); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
                 }
                 <Button func={() => { setEdit(true) }} name="Edit" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
             </View>
         </View>
     </>)
+
 }

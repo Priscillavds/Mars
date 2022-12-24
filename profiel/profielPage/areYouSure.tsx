@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import Constants from "expo-constants";
@@ -19,16 +20,17 @@ interface Profiel {
 interface AreYouSureParm {
     profiel: Profiel,
     updateProfiel: { (id: number, newProfiel: Profiel): void },
-    deleteProfiel: { (id: number): void }
+    deleteProfiel: { (id: number,check:boolean): void }
     sure: string,
     setEdit: { (edit: boolean): void },
     setSure: { (sure: string): void },
     name: string,
     navigation: any,
+    check:boolean
     imgUri?: string
 }
 
-export const AreYouSure = ({ profiel, updateProfiel, deleteProfiel, sure, setEdit, setSure, name, navigation, imgUri }: AreYouSureParm) => {
+export const AreYouSure = ({ profiel, updateProfiel, deleteProfiel, sure, setEdit, setSure, name, navigation, check, imgUri }: AreYouSureParm) => {
     const resetFunc = () => {
         updateProfiel(profiel.id, { id: 87, name: profiel.name, wrong: 0, correct: 0, imgUri: profiel.imgUri })
     }
@@ -38,7 +40,7 @@ export const AreYouSure = ({ profiel, updateProfiel, deleteProfiel, sure, setEdi
     }
 
     const deleteFunc = () => {
-        deleteProfiel(profiel.id)
+        deleteProfiel(profiel.id, check)
         navigation.push('Profielen')
     }
 
@@ -88,4 +90,5 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignSelf: "center"
     }
+
 });
