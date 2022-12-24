@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import Constants from "expo-constants";
@@ -89,4 +90,5 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignSelf: "center"
     }
+
 });

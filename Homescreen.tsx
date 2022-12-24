@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, Alert, Image } from 'react-native';
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -9,7 +10,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { Component } from 'react';
 import { Quiz } from './quiz/quiz';
 import { Button } from "./algemeen/button";
-
 
 
 const HomeScreen = () => {
@@ -54,4 +54,5 @@ const styles = StyleSheet.create({
         paddingBottom:20
     }
 });
+
 export default HomeScreen

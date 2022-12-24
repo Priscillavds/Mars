@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -272,5 +273,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "200%",
     }
+
 
 });

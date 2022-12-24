@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Image } from 'react-native';
 import Constants from "expo-constants";
@@ -61,4 +62,5 @@ export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, p
             </View>
         </View>
     </>)
+
 }

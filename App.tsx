@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, Alert, Button, Image, LogBox } from 'react-native';
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -243,5 +244,6 @@ const styles = StyleSheet.create({
     width: 95,
   }
 });
+
 
 export default App;

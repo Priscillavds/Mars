@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Keyboard } from 'react-native';
 import Constants from "expo-constants";
@@ -163,4 +164,5 @@ export const styles = StyleSheet.create({
         marginLeft: normalTextSize,
         marginRight: normalTextSize,
     }
+
 });

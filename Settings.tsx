@@ -1,68 +1,32 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { useState } from 'react';
 import { Button } from 'react-native-paper'
 import { LinearGradient } from "expo-linear-gradient";
-import BVLinearGradient from 'react-native-linear-gradient';
-import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-interface StorageProps {
-  siff?: string,
-  setDiff?: (difficulty: string) => void,
-  difficultyoffset?: string,
-  difficultyrange?: string,
-  timer?: string
-  setTimer?: (timer: string) => void
-}
-
 const Options = () => {
-  const [diff, setDiff] = useState<string>("easy");
+  const [diff, setDiff] = useState<string>("");
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
-  const [timer, setTimer] = useState<number>(10);
+  const [timer, setTimer] = useState<number>(0);
 
   const loadData = async () => {
-    let time: any = await AsyncStorage.getItem("timer");
-    let storedDiff: any = await AsyncStorage.getItem("difficulty");
-    if (time == null) {
-      setDataLoaded(true);
-    }
+    let storedTime: string | null = await AsyncStorage.getItem("timer");
+    let storedDiff: string | null = await AsyncStorage.getItem("difficulty");
 
-    else {
-      setTimer(parseInt(time))
+    if (storedTime == null || storedDiff == null) {
+      setDataLoaded(true);
+    } else {
+      setTimer(parseInt(storedTime))
       DifficultySetter(storedDiff);
       setDataLoaded(true);
     }
   }
 
   if (!dataLoaded) loadData();
-  
+
   const DifficultySetter = async (a: string) => {
-    switch (a) {
-
-      case "easy":
-        setDiff(a);
-        await AsyncStorage.setItem("difficulty", a)
-        await AsyncStorage.setItem("difficultyrange", "300")
-        await AsyncStorage.setItem("difficultyoffset", "100")
-        break;
-
-      case "normal":
-        setDiff(a);
-        await AsyncStorage.setItem("difficulty", a)
-        await AsyncStorage.setItem("difficultyrange", "700")
-        await AsyncStorage.setItem("difficultyoffset", "400")
-        break;
-
-      case "hard":
-        setDiff(a);
-        await AsyncStorage.setItem("difficulty", a)
-        await AsyncStorage.setItem("difficultyrange", "1000")
-        await AsyncStorage.setItem("difficultyoffset", "800");
-        break;
-    }
-
-
+    setDiff(a);
+    await AsyncStorage.setItem("difficulty", a)
   }
 
   const changeTimer = async (a: number) => {
@@ -71,8 +35,10 @@ const Options = () => {
   }
 
   const ResetStorage = async () => {
-    changeTimer(10);
-    DifficultySetter("easy");
+    await AsyncStorage.removeItem("difficulty");
+    await AsyncStorage.removeItem("timer");
+    await changeTimer(10);
+    await DifficultySetter("easy");
   }
 
   return <View style={styles.buttoncontainer}>
@@ -118,8 +84,6 @@ const Options = () => {
 
   </View>
 }
-
-
 
 export default function Settings() {
   return (

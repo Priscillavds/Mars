@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
 import Constants from "expo-constants";
@@ -62,4 +63,5 @@ const styles = StyleSheet.create({
         paddingLeft:normalTextSize * 2,
         paddingRight:normalTextSize * 2
     }
+
 });
