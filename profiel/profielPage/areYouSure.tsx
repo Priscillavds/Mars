@@ -19,7 +19,7 @@ interface Profiel {
 interface AreYouSureParm {
     profiel: Profiel,
     updateProfiel: { (id: number, newProfiel: Profiel): void },
-    deleteProfiel: { (id: number): void }
+    deleteProfiel: { (id: number,check:boolean): void }
     sure: string,
     setEdit: { (edit: boolean): void },
     setSure: { (sure: string): void },
