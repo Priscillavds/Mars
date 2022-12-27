@@ -10,19 +10,23 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { Component } from 'react';
 import { Quiz } from './quiz/quiz';
 import { Button } from "./algemeen/button";
+import { LinearGradient } from "expo-linear-gradient";
 
 
 const HomeScreen = () => {
     const navigation : any = useNavigation();
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Home</Text>
-            <Text style={styles.text}>Probeer deze moeilijke quiz en leer meer over verschillende onderwerpen. Vergeet zeker geen profiel aan te maken voor je score bij te houden. Zo kan je je score elke keer proberen te verbeteren. 
-            Is het nog een beetje te gemakkelijk, dan kan je altijd de settings aanpassen.</Text>
+        <View>
+            <LinearGradient style={styles.gradient} colors={["#ffb7b2","#FFE0E0" ]}>
+                <View style={styles.container}>
+                <Text style={styles.title}>Home</Text>
+                <Text style={styles.text}>Probeer deze moeilijke quiz en leer meer over verschillende onderwerpen. Vergeet zeker geen profiel aan te maken voor je score bij te houden. Zo kan je je score elke keer proberen te verbeteren. 
+                Is het nog een beetje te gemakkelijk, dan kan je altijd de settings aanpassen.</Text>
             
-            <Image style={styles.tinyLogo} source={require('./assets/logo.png')}
-      />
-             <Button func={() => navigation.navigate("Quiz")} name="Quiz" backColor='red' borderColor='darkred' textColor="white" ></Button>
+                <Image style={styles.tinyLogo} source={require('./assets/logo.png')}/>
+                <Button func={() => navigation.navigate("Quiz")} name="Quiz" backColor='red' borderColor='darkred' textColor="white" ></Button>
+                </View>
+                </LinearGradient>
         </View>
     );
 }
@@ -31,11 +35,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         fontSize:'10rem',
-        backgroundColor: '#ffb7b2',
+        //backgroundColor: '#ffb7b2',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 15
 
+    },
+    gradient: {
+        height:720
     },
     text: {
         fontSize: 18,

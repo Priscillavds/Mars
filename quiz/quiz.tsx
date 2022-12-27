@@ -6,6 +6,7 @@ import { Button } from '../algemeen/button'
 import Constants from "expo-constants";
 import React, { useState, useContext, useEffect } from "react";
 import { normalTextSize } from '../profiel/styleProfiel';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Profiel {
     id: number,
@@ -154,6 +155,8 @@ export const Quiz = ({ route }: { route: any }) => {
 
     return (
         <View style={styles.container}>
+            <LinearGradient  style={styles.gradient} colors={["#ffb7b2","#FFE0E0" ]}>
+            <View style={styles.container}>
             <View style={styles.profiel}>
                 <Text style={{ fontSize: normalTextSize * .5 }}>{profiel?.name}</Text>
             </View>
@@ -190,6 +193,8 @@ export const Quiz = ({ route }: { route: any }) => {
                     </View>
                 </>}
             </View>
+            </View>
+            </LinearGradient>
         </View>
     )
 }
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         flexDirection: "column",
         flex: 1,
-        backgroundColor: "#ffb7b2"
+        //backgroundColor: "#ffb7b2"
     },
 
     profiel: {
@@ -272,6 +277,9 @@ const styles = StyleSheet.create({
         backgroundColor: "red",
         width: "100%",
         height: "200%",
+    },
+    gradient: {
+        height:680
     }
 
 
