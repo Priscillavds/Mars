@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
 import Constants from "expo-constants";
@@ -28,8 +29,6 @@ export const Profielen = ({navigation,route }: { navigation: any,route:any }) =>
             return a.id - b.id;
         }
     );
-
-        console.log(route.params.playerId)
 
     return (
         <View style={styles.container}>
@@ -64,4 +63,5 @@ const styles = StyleSheet.create({
         paddingLeft:normalTextSize * 2,
         paddingRight:normalTextSize * 2
     }
+
 });

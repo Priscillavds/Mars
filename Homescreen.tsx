@@ -1,3 +1,4 @@
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Pressable, Alert, Image } from 'react-native';
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
