@@ -142,7 +142,7 @@ export const Quiz = ({ route }: { route: any }) => {
     useEffect(() => {
         let handle = setInterval(() => {
             setTime(time => {
-                if (time >= timer) { wrongAnswer("Time up"); return 0 }
+                if (timer <= time) { wrongAnswer("Time up"); return 0 }
                 return time + 1
             });
 
