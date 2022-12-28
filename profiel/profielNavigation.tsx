@@ -10,13 +10,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ProfielPage } from "./profielPage/profielPage"
 import { Profielen } from "./profielen/profielen"
 
-interface Profiel {
-    id: number,
-    name: string,
-    wrong: number,
-    correct: number
-}
-
 const Stack = createNativeStackNavigator();
 
 export const ProfielenNavigation = ({route }: { route:any }) => {

@@ -4,6 +4,8 @@ import { Button } from 'react-native-paper'
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { normalTextSize } from './profiel/styleProfiel';
+
 const Options = () => {
   const [diff, setDiff] = useState<string>("");
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
@@ -42,21 +44,24 @@ const Options = () => {
   }
 
   return <View style={styles.buttoncontainer}>
-    <Text style={styles.textstylesub}>Time limit</Text>
-    <View>
-      <Button
-        mode={timer == 10 ? "contained" : "text"}
-        onPress={() => changeTimer(10)}
-        color="yellow">10 Seconds</Button>
-      <Button
-        mode={timer == 20 ? "contained" : "text"}
-        onPress={() => changeTimer(20)}
-        color="yellow">20 Seconds</Button>
-      <Button
-        mode={timer == 30 ? "contained" : "text"}
-        onPress={() => changeTimer(30)}
-        color="yellow">30 Seconds</Button>
+    <View style={styles.options}>
+      <Text style={styles.textstylesub}>Time limit</Text>
+      <View>
+        <Button
+          mode={timer == 10 ? "contained" : "text"}
+          onPress={() => changeTimer(10)}
+          color="yellow">10 Seconds</Button>
+        <Button
+          mode={timer == 20 ? "contained" : "text"}
+          onPress={() => changeTimer(20)}
+          color="yellow">20 Seconds</Button>
+        <Button
+          mode={timer == 30 ? "contained" : "text"}
+          onPress={() => changeTimer(30)}
+          color="yellow">30 Seconds</Button>
+      </View>
     </View>
+  <View style={styles.options}>
     <Text style={styles.textstylesub}>Difficulty</Text>
     <View>
       <Button
@@ -72,7 +77,7 @@ const Options = () => {
         onPress={() => DifficultySetter("hard")}
         color="yellow">Hard</Button>
     </View>
-    <Text></Text>
+    </View>
     <View>
       <Button
         mode='contained'
@@ -81,7 +86,6 @@ const Options = () => {
       >Reset Settings
       </Button>
     </View>
-
   </View>
 }
 
@@ -93,9 +97,7 @@ export default function Settings() {
         <View style={styles.titleview}>
           <Text style={styles.textstylemain}>Settings</Text>
         </View>
-        <Text></Text>
         <Options />
-        <Text></Text>
       </View>
     </LinearGradient>
   );
@@ -108,25 +110,32 @@ const styles = StyleSheet.create({
     backgroundGradient: "vertical",
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 15
   },
+
   buttoncontainer: {
-    borderColor: 'black',
-    backgroundColor: "transparent",
-    justifyContent: 'center',
     alignItems: 'center',
-    fontSize: "10rem",
   },
+
+  options: {
+    paddingBottom:20
+  },
+
   gradient: {
-    height: 720
+    height: "100%"
   },
+
   textstylesub: {
-    fontSize: 30,
+    fontSize: normalTextSize * 1.5,
   },
+
   titleview: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingBottom:20
   },
+
   textstylemain: {
-    fontSize: 40,
+    fontSize: normalTextSize * 2,
   }
 });

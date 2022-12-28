@@ -1,13 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Keyboard, Text, View, TextInput, ScrollView, Image } from 'react-native';
-import Constants from "expo-constants";
+import { Keyboard, Text, View, TextInput, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
+import { lightPurple, darkPuple, normalTextSize } from "../styleProfiel";
 import { Detail } from "./detail";
 import { Button } from "../../algemeen/button"
 import { styles } from "./profielPage";
 import { useState, useEffect } from 'react';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface Profiel {
     id: number,
@@ -44,15 +43,12 @@ export const Edit = ({ profiel, color, total, procent, setSure, name, setName, i
     }, []);
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
         let result: ImagePicker.ImagePickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
-
-        console.log(result);
 
         if (!result.canceled) {
             SetImgUri(result.assets[0].uri);
@@ -74,23 +70,24 @@ export const Edit = ({ profiel, color, total, procent, setSure, name, setName, i
         </View>
 
         {!keyboard &&
-            <View style={styles.bottom}>
-                <View style={styles.procent}>
-                    <Text style={[styles.procentText, { fontSize: normalTextSize * 2.5, color: color }]}>{procent}%</Text>
-                    <Text style={[styles.procentText, { color: color }]}>Correct</Text>
-                    <View style={styles.reset}><Button func={() => { setSure("To Reset") }} name="Reset" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button></View>
+            <LinearGradient style={styles.gradient} colors={['rgb(46,117,182)', 'lightblue rgb(189,215,238)']}>
+                <View style={styles.bottom}>
+                    <View style={styles.procent}>
+                        <Text style={[styles.procentText, { fontSize: normalTextSize * 2.5, color: color }]}>{procent}%</Text>
+                        <Text style={[styles.procentText, { color: color }]}>Correct</Text>
+                        <View style={styles.reset}><Button func={() => { setSure("To Reset") }} name="Reset" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button></View>
+                    </View>
+                    <View style={styles.details}>
+                        <Detail title='Total question:' info={total.toString()}></Detail>
+                        <Detail title='Correct answer:' info={profiel.correct.toString()}></Detail>
+                        <Detail title='Wrong answer:' info={profiel.wrong.toString()}></Detail>
+                    </View>
+                    <View style={styles.opties}>
+                        <Button func={() => { setSure("To Remove") }} name="Remove" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                        <Button func={() => { setSure("To Save") }} name="Save" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                    </View>
                 </View>
-                <View style={styles.details}>
-                    <Detail title='Total question:' info={total.toString()}></Detail>
-                    <Detail title='Correct answer:' info={profiel.correct.toString()}></Detail>
-                    <Detail title='Wrong answer:' info={profiel.wrong.toString()}></Detail>
-                </View>
-                <View style={styles.opties}>
-                    <Button func={() => { setSure("To Remove") }} name="Remove" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                    <Button func={() => { setSure("To Save") }} name="Save" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                </View>
-            </View>
+            </LinearGradient>
         }
-    </>
-    )
+    </>)
 }

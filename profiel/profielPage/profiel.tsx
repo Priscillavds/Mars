@@ -31,8 +31,8 @@ interface ProfielParm {
     setReload: { (id: boolean): void }
 }
 
-export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, player, updatePlayer,reload,setReload }: ProfielParm) => {
-    
+export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, player, updatePlayer, reload, setReload }: ProfielParm) => {
+
     return (<>
         <View style={styles.top}>
             <View style={styles.imgContainer}>
@@ -43,27 +43,26 @@ export const Profiel = ({ profiel, color, total, procent, navigation, setEdit, p
             </View>
             <Text style={styles.name}>{profiel.name}</Text>
         </View>
-        <LinearGradient style={styles.gradient} colors={['rgb(46,117,182)','lightblue rgb(189,215,238)']}>
-        <View style={styles.bottom}>
-            <View style={styles.procent}>
-                <Text style={[styles.procentText, { fontSize: normalTextSize * 2.5, color: color }]}>{procent}%</Text>
-                <Text style={[styles.procentText, { color: color }]}>Correct</Text>
+        <LinearGradient style={styles.gradient} colors={['rgb(46,117,182)', 'lightblue rgb(189,215,238)']}>
+            <View style={styles.bottom}>
+                <View style={styles.procent}>
+                    <Text style={[styles.procentText, { fontSize: normalTextSize * 2.5, color: color }]}>{procent}%</Text>
+                    <Text style={[styles.procentText, { color: color }]}>Correct</Text>
+                </View>
+                <View style={styles.details}>
+                    <Detail title='Total question:' info={total.toString()}></Detail>
+                    <Detail title='Correct answer:' info={profiel.correct.toString()}></Detail>
+                    <Detail title='Wrong answer:' info={profiel.wrong.toString()}></Detail>
+                </View>
+                <View style={styles.opties}>
+                    <Button func={() => { navigation.push('Profielen') }} name="Back" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                    {player == profiel.id ?
+                        <Button func={() => { }} name="Selected" backColor={lightPurple} borderColor={lightPurple} textColor="lightgrey"></Button> :
+                        <Button func={() => { updatePlayer(profiel.id); setReload(!reload); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                    }
+                    <Button func={() => { setEdit(true) }} name="Edit" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
+                </View>
             </View>
-            <View style={styles.details}>
-                <Detail title='Total question:' info={total.toString()}></Detail>
-                <Detail title='Correct answer:' info={profiel.correct.toString()}></Detail>
-                <Detail title='Wrong answer:' info={profiel.wrong.toString()}></Detail>
-            </View>
-            <View style={styles.opties}>
-                <Button func={() => { navigation.push('Profielen') }} name="Back" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                {player == profiel.id ?
-                    <Button func={() => { }} name="Selected" backColor={darkBlue} borderColor={darkBlue} textColor="lightgrey"></Button> :
-                    <Button func={() => { updatePlayer(profiel.id); }} name="Select" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-                }
-                <Button func={() => { setEdit(true) }} name="Edit" backColor={lightPurple} borderColor={darkPuple} textColor="white"></Button>
-            </View>
-        </View>
         </LinearGradient>
     </>)
-
 }

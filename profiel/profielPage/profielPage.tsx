@@ -1,18 +1,12 @@
-
-import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View, TextInput, ScrollView, Keyboard } from 'react-native';
+import {  StyleSheet,  View } from 'react-native';
 import Constants from "expo-constants";
-import { LinearGradient } from "expo-linear-gradient";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
-import { Detail } from "./detail";
-import { Button } from "../../algemeen/button"
 import { useState,useEffect } from 'react';
 import { AreYouSure } from "./areYouSure";
 import { Profiel } from "./profiel";
 import { Edit } from "./edit";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 interface Profiel {
     id: number,
@@ -67,7 +61,6 @@ export const styles = StyleSheet.create({
     container: {
         paddingTop: Constants.statusBarHeight,
         flexDirection: "column", flex: 1,
-        backgroundColor: red
     },
 
     top: {
@@ -85,10 +78,10 @@ export const styles = StyleSheet.create({
         borderColor: darkBlue,
         borderWidth: normalTextSize * .15,
         marginBottom: normalTextSize,
-
         justifyContent: "flex-end",
         paddingLeft: 125
     },
+
     img: {
         position:"absolute",
         width: 175 - (normalTextSize * .15 * 2),
@@ -96,6 +89,7 @@ export const styles = StyleSheet.create({
         top:- (normalTextSize * .0 ),
         borderRadius: 10000,
     },
+
     name: {
         fontSize: normalTextSize * 1.25,
         textAlign: "center",
@@ -111,13 +105,16 @@ export const styles = StyleSheet.create({
         paddingBottom: normalTextSize / 2,
         paddingTop: normalTextSize / 2
     },
+
     gradient: {
         height:'60%'
     },
+
     procent: {
         height: "42.5%",
         justifyContent: "center",
     },
+
     procentText: {
         textAlign: "center",
         color: "white",
@@ -129,11 +126,13 @@ export const styles = StyleSheet.create({
         justifyContent: "space-around",
         paddingRight: normalTextSize * 1.333
     },
+
     detail: {
         justifyContent: "space-between",
         flexDirection: "row",
         paddingBottom: normalTextSize
     },
+
     detailText: {
         color: "white",
         fontSize: normalTextSize * 1
@@ -163,10 +162,9 @@ export const styles = StyleSheet.create({
         paddingLeft: normalTextSize,
         paddingRight: normalTextSize,
         borderColor: darkPuple,
-        borderRadius: 1000,
+        borderRadius: 10,
         borderWidth: normalTextSize * .15,
         marginLeft: normalTextSize,
         marginRight: normalTextSize,
     }
-
 });

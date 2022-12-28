@@ -1,12 +1,11 @@
-
-import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from '../algemeen/button'
-import Constants from "expo-constants";
-import React, { useState, useContext, useEffect } from "react";
-import { normalTextSize } from '../profiel/styleProfiel';
 import { LinearGradient } from 'expo-linear-gradient';
+import Constants from "expo-constants";
+import React, { useState, useEffect } from "react";
+
+import { normalTextSize } from '../profiel/styleProfiel';
+import { Button } from '../algemeen/button';
 
 interface Profiel {
     id: number,
@@ -32,7 +31,6 @@ interface Queistion {
 let questions: Queistion[] = [];
 
 export const Quiz = ({ route }: { route: any }) => {
-
     const [questionIndex, setQuestionIndex] = useState<number>(0);
     const [question, setQuestion] = useState<Queistion>();
     const [ansewers, setAnsewers] = useState<JSX.Element[]>([]);
@@ -87,7 +85,7 @@ export const Quiz = ({ route }: { route: any }) => {
                 func={() => { wrongAnswer("Wrong answer"); }}
                 name={ansewer}
                 backColor="red"
-                borderColor="red"
+                borderColor="darkred"
                 textColor="white"
             ></Button>));
 
@@ -96,7 +94,7 @@ export const Quiz = ({ route }: { route: any }) => {
                 func={() => { correctAnswer() }}
                 name={localQuestion.correctAnswer}
                 backColor="red"
-                borderColor="red"
+                borderColor="darkred"
                 textColor="white"
             ></Button>))
 
@@ -154,46 +152,43 @@ export const Quiz = ({ route }: { route: any }) => {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <LinearGradient  style={styles.gradient} colors={["#ffb7b2","#FFE0E0" ]}>
-            <View style={styles.container}>
-            <View style={styles.profiel}>
-                <Text style={{ fontSize: normalTextSize * .5 }}>{profiel?.name}</Text>
-            </View>
-            <View style={styles.header}>
-                {question ?
-                    <Text style={styles.title}>{question.question}</Text> :
-                    <Text style={styles.title}>Loading</Text>
-                }
-            </View>
-            <View style={styles.main}>
-                {ansewers.map((element: JSX.Element, index: number) => <View key={index} style={styles.buttonContainer}>{element}</View>)}
-            </View>
-            <View style={styles.footer}>
-                {!message && question &&
-                    <View style={styles.timeBar}>
-                        <View style={[styles.bar, { width: `${(timer - time) * (100 / timer)}%` }]}></View>
-                        <Text style={styles.timeText}>{timer - time}</Text>
-                    </View>}
-                {message && <>
-                    {message.startsWith("C") ?
-                        <Text style={[styles.text, { color: "green" }]}> {message}</Text> :
-                        <>
-                            <Text style={[styles.text, { color: "red" }]}> {message} </Text>
-                            <Text style={[styles.text, { color: "red" }]}> Correct answer {question?.correctAnswer}</Text>
-                        </>}
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            func={() => { nextQuestion(); }}
-                            name="Next"
-                            backColor="red"
-                            borderColor="red"
-                            textColor="white"
-                        ></Button>
+        <View>
+            <LinearGradient style={styles.gradient} colors={["#ffb7b2", "#FFE0E0"]}>
+                <View style={styles.container}>
+                    <View style={styles.header}>
+                        {question ?
+                            <Text style={styles.question}>{question.question}</Text> :
+                            <Text style={styles.question}>Loading</Text>
+                        }
                     </View>
-                </>}
-            </View>
-            </View>
+                    <View style={styles.main}>
+                        {ansewers.map((element: JSX.Element, index: number) => <View key={index} style={styles.buttonContainer}>{element}</View>)}
+                    </View>
+                    <View style={styles.footer}>
+                        {!message && question &&
+                            <View style={styles.timeBar}>
+                                <View style={[styles.bar, { width: `${(timer - time) * (100 / timer)}%` }]}></View>
+                                <Text style={styles.timeText}>{timer - time}</Text>
+                            </View>}
+                        {message && <>
+                            {message.startsWith("C") ?
+                                <Text style={[styles.text, { color: "green" }]}> {message}</Text> :
+                                <>
+                                    <Text style={[styles.text, { color: "red" }]}> {message} </Text>
+                                    <Text style={[styles.text, { color: "red" }]}> Correct answer {question?.correctAnswer}</Text>
+                                </>}
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    func={() => { nextQuestion(); }}
+                                    name="Next"
+                                    backColor="red"
+                                    borderColor="darkred"
+                                    textColor="white"
+                                ></Button>
+                            </View>
+                        </>}
+                    </View>
+                </View>
             </LinearGradient>
         </View>
     )
@@ -204,20 +199,13 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         flexDirection: "column",
         flex: 1,
-        //backgroundColor: "#ffb7b2"
+        padding: 15
     },
 
-    profiel: {
-        height: normalTextSize,
-        justifyContent: 'center',
-        alignItems: "center",
-        backgroundColor: "lightblue"
-    },
-
-    title: {
+    question: {
         fontSize: normalTextSize,
         textAlign: "center",
-        color: "red"
+        color: "#AD2B2B"
     },
 
     header: {
@@ -249,7 +237,7 @@ const styles = StyleSheet.create({
 
     timeBar: {
         position: "relative",
-        borderColor: "red",
+        borderColor: "darkred",
         borderStyle: "solid",
         borderWidth: normalTextSize * .25,
         width: "80%",
@@ -278,9 +266,8 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "200%",
     },
+    
     gradient: {
-        height:680
+        height: "100%"
     }
-
-
 });

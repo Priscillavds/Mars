@@ -1,6 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
 import { Pressable, StyleSheet, Text, View, } from 'react-native';
-import Constants from "expo-constants";
 
 import { normalTextSize } from '../profiel/styleProfiel'
 
@@ -19,13 +17,13 @@ export const Button = ({ func, name, backColor, borderColor, textColor }: Button
                 <Text style={[styles.buttonText, {color:textColor}]}>{name}</Text>
             </View>
         </Pressable>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     button: {
         backgroundColor: "lightgrey",
-        borderRadius: 1000,
+        borderRadius: 10,
         borderColor: "grey",
         borderWidth: normalTextSize * .15,
         minWidth: normalTextSize * 6,

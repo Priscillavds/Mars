@@ -1,9 +1,6 @@
-import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View, Image } from 'react-native';
-import Constants from "expo-constants";
+import { StyleSheet, Text, View, Image } from 'react-native';
 
-
-import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
+import {darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
 
 interface Profiel {
     id: number,
@@ -33,7 +30,6 @@ export const ExempleProfiel = ({ profiel, rank }: { profiel: Profiel, rank: numb
 
 const styles = StyleSheet.create({
     container: {
-        //paddingTop: Constants.statusBarHeight,
         flexDirection: "row",
         justifyContent: "space-around",
         marginBottom: normalTextSize * .5,
@@ -47,6 +43,7 @@ const styles = StyleSheet.create({
         paddingLeft: 0,
         paddingRight: 0,
     },
+
     Text: {
         textAlign: "center",
         fontSize: normalTextSize,
@@ -62,6 +59,7 @@ const styles = StyleSheet.create({
         borderWidth: normalTextSize * .15,
         alignSelf: "center"
     },
+    
     img: {
         position: "absolute",
         width: 100 - (normalTextSize * .15 * 2),
@@ -69,5 +67,4 @@ const styles = StyleSheet.create({
         top: - (normalTextSize * .0),
         borderRadius: 10000,
     },
-
 });

@@ -1,13 +1,8 @@
-
-import { StatusBar } from 'expo-status-bar';
-import { Pressable, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 import Constants from "expo-constants";
 
-import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
-import { Detail } from "./detail";
+import { normalTextSize } from "../styleProfiel";
 import { Button } from "../../algemeen/button"
-
-import { useState } from 'react';
 
 interface Profiel {
     id: number,
@@ -80,10 +75,12 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255,255,255,.75)",
         justifyContent: "center"
     },
+    
     areYouSureText: {
         fontSize: normalTextSize,
         textAlign: "center"
     },
+    
     yesNo: {
         width: "50%",
         height: "25%",

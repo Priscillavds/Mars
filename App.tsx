@@ -1,13 +1,12 @@
-
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Pressable, Alert, Button, Image, LogBox } from 'react-native';
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-//import { createDrawerNavigator } from "@react-navigation/drawer";
+import { StyleSheet, LogBox } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from '@expo/vector-icons'; 
+import { Fontisto } from '@expo/vector-icons';
 
 import Settings from './Settings';
 import HomeScreen from './Homescreen';
@@ -16,7 +15,8 @@ import { Quiz } from './quiz/quiz';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
-  'equire cycle:'
+  'equire cycle:',
+  'key'
 ]);
 
 interface ProfielObject {
@@ -39,7 +39,6 @@ const profielen: ProfielObject = {
       wrong: 0,
       correct: 0
     },
-
   ]
 };
 
@@ -55,12 +54,15 @@ function App() {
     let difficulty: string | null = await AsyncStorage.getItem("difficulty");
     let player: string | null = await AsyncStorage.getItem("player");
     let profiels: string | null = await AsyncStorage.getItem("profiels");
+
     if (timer == null || difficulty == null) {
       await AsyncStorage.setItem("timer", "10");
       await AsyncStorage.setItem("difficulty", "easy");
     }
+
     if (player == null) await AsyncStorage.setItem("player", "0");
     if (profiels == null) await AsyncStorage.setItem("profiels", JSON.stringify(profielen));
+
     setSettingsLoaded(true);
   }
 
@@ -84,7 +86,6 @@ function App() {
         loadProfielsList.forEach((p: Profiel) => profiels.push(p));
         setProfiels([...profiels]);
       }
-      // = [...JSON.parse(loadProfiels).profiels]
     }
     LoadProfiels();
   }, [])
@@ -110,7 +111,6 @@ function App() {
   }
 
   const updateProfiel = async (id: number, newProfiel: Profiel) => {
-
     let oldProfiel: Profiel | null = getProfiel(id);
     if (oldProfiel == null) { return }
 
@@ -124,7 +124,6 @@ function App() {
   }
 
   const deleteProfiel = async (id: number,check:boolean) => {
-
     let index: number | null = getProfielIndex(id);
     if (index == null || profiels.length <= 1) { return; }
 
@@ -134,7 +133,6 @@ function App() {
     }else {
       profiels.splice(index, 1);
     }
-
     
     setProfiels([...profiels]);
     await AsyncStorage.setItem("profiels", JSON.stringify({ profiels: profiels }));
@@ -165,85 +163,28 @@ function App() {
           headerShown: false,
           tabBarActiveTintColor: "green",
           tabBarInactiveTintColor: "blue",
-        }}
+        }}>
 
-      >
         <Tab.Screen name="Home" component={HomeScreen} options={{
           tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
         }} />
         <Tab.Screen name="Quiz" component={Quiz}
           initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel }}
           options={{
-            tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
+            tabBarIcon: ({ color, size }: any) => <Fontisto name="question" size={size} color={color} />,
           }} />
         <Tab.Screen name="Profiels" component={ProfielenNavigation}
           initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, deleteProfiel: deleteProfiel, updatePlayer: updatePlayer }}
           options={{
-            tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color}
-            />,
+            tabBarIcon: ({ color, size }: any) => <Ionicons name="person" size={size} color={color}  />
           }} />
         <Tab.Screen name="Settings" component={Settings} options={{
           tabBarIcon: ({ color, size }: any) => <MaterialIcons name="settings" size={size} color={color} />
         }} />
-
       </Tab.Navigator>
     </NavigationContainer>
 
   );
 }
-
-/*
-const App = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <Text style={styles.title}></Text>
-      <Text style={styles.title}></Text>
-      
-
-      <Text style={styles.text}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. At in tellus integer feugiat scelerisque varius morbi. Faucibus turpis in eu mi bibendum neque. Tristique nulla aliquet enim tortor at. Neque ornare aenean euismod elementum nisi quis eleifend. Cursus vitae congue mauris rhoncus aenean vel. Quis eleifend quam adipiscing vitae. Felis imperdiet proin fermentum leo vel orci porta. Neque laoreet suspendisse interdum consectetur libero id faucibus. Nec nam aliquam sem et. Egestas sed sed risus pretium quam vulputate dignissim suspendisse in. Faucibus vitae aliquet nec ullamcorper sit amet risus nullam eget.</Text>
-      <Text style={styles.title}></Text>
-      <Text style={styles.title}></Text>
-      
-      <Pressable
-                style={styles.pressable}
-                onPress={() => {
-                    Alert.alert("Pressed!");
-                }}
-            >
-                <Text style={styles.buttontext}>Quiz</Text>
-      </Pressable>
-      
-    </View>
-  );
-}*/
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ffb7b2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 15
-
-  },
-  pressable: {
-    backgroundColor: '#ff4032'
-  },
-  text: {
-    color: '#AD2B2B'
-  },
-  buttontext: {
-    color: 'white'
-  },
-  title: {
-    fontSize: 32,
-    color: '#ff1100'
-  },
-  image: {
-    width: 95,
-  }
-});
-
 
 export default App;
