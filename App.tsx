@@ -1,4 +1,4 @@
-import { StyleSheet, LogBox } from 'react-native';
+import { StyleSheet, LogBox, Alert } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from '@expo/vector-icons';
@@ -125,7 +125,7 @@ function App() {
 
   const deleteProfiel = async (id: number,check:boolean) => {
     let index: number | null = getProfielIndex(id);
-    if (index == null || profiels.length <= 1) { return; }
+    if (index == null || profiels.length <= 1) { Alert.alert("Error","Can not be removed");return; }
 
     if (check) {
       profiels.splice(index, 1);   
