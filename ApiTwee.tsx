@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 
 import {View, Button, Text, ActivityIndicator} from "react-native";
 
+
+
 export interface ResponseResult {
     category:         string;
     id:               string;
