@@ -143,20 +143,20 @@ export const Quiz = ({ route }: { route: any }) => {
         }
     }, [questionIndex]);
 
+    
 
     useEffect(() => {
-        let handle = setInterval(() => {
+        const handle = setInterval(() => {
             setTime(time => {
                 if (timer <= time) { wrongAnswer("Time up"); return 0 }
                 return time + 1
             });
-
+    
         }, 1000);
-
         return () => {
             clearInterval(handle);
         }
-    }, []);
+    }, [timer]);
 
     return (
         <ScrollView>
