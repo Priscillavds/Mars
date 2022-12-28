@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, View, ScrollView } from 'react-native';
 import Constants from "expo-constants";
+import { useIsFocused } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 
 import { lightPurple, darkPuple, darkBlue, normalTextSize } from "../styleProfiel";
 import { Button } from "../../algemeen/button";
@@ -13,6 +15,11 @@ interface Profiel {
 }
 
 export const Profielen = ({ navigation, route }: { navigation: any, route: any }) => {
+    const [reload,setReload] = useState<boolean>(false);
+    const isFocused = useIsFocused();
+
+    useEffect(() => { setReload(!reload); }, [isFocused]);
+    
     let sortProfielen: Profiel[] = route.params.profiels.sort(
         (a: Profiel, b: Profiel) => {
             const totalA: number = a.correct + a.wrong;

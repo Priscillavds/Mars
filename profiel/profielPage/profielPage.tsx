@@ -1,6 +1,7 @@
 import {  StyleSheet,  View } from 'react-native';
 import Constants from "expo-constants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 import { red, oragne, yellow, lightGreen, lightPurple, darkPuple, darkBlue, lightBlue, normalTextSize } from "../styleProfiel";
 import { useState,useEffect } from 'react';
@@ -23,6 +24,10 @@ export const ProfielPage = ({ route, navigation }: { route: any, navigation: any
     const [imgUri, SetImgUri] = useState<string>(route.params.profiel.imgUri)
     const [reload,setReload] = useState<boolean>(false);
     const [player, setPlayer] = useState<number>(0);
+
+    const isFocused = useIsFocused();
+
+    useEffect(() => { setReload(!reload); }, [isFocused]);
 
     useEffect(() => {
         SetName(profiel.name);

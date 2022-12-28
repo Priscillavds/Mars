@@ -167,7 +167,8 @@ function App() {
 
         <Tab.Screen name="Home" component={HomeScreen} options={{
           tabBarIcon: ({ color, size }: any) => <FontAwesome name="home" size={size} color={color} />,
-        }} />
+        }} 
+         />
         <Tab.Screen name="Quiz" component={Quiz}
           initialParams={{ profiels: profiels, newProfiel: newProfiel, updateProfiel: updateProfiel, getProfiel: getProfiel }}
           options={{

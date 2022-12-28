@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from 'expo-linear-gradient';
 import Constants from "expo-constants";
 import React, { useState, useEffect } from "react";
+import { useIsFocused } from '@react-navigation/native';
 
 import { normalTextSize } from '../profiel/styleProfiel';
 import { Button } from '../algemeen/button';
@@ -31,6 +32,7 @@ interface Queistion {
 let questions: Queistion[] = [];
 
 export const Quiz = ({ route }: { route: any }) => {
+
     const [questionIndex, setQuestionIndex] = useState<number>(0);
     const [question, setQuestion] = useState<Queistion>();
     const [ansewers, setAnsewers] = useState<JSX.Element[]>([]);
@@ -43,6 +45,10 @@ export const Quiz = ({ route }: { route: any }) => {
 
     const profiel: Profiel = route.params.getProfiel(player);
 
+    const isFocused = useIsFocused();
+
+    useEffect(() => { nextQuestion() }, [isFocused]);
+
     const LoadData = async () => {
         let loadTimer: string | null = await AsyncStorage.getItem("timer");
         let loadDifficulty: string | null = await AsyncStorage.getItem("difficulty");
@@ -51,6 +57,7 @@ export const Quiz = ({ route }: { route: any }) => {
         if (loadTimer != null) setTimer(parseInt(loadTimer));
         if (loadPlayer != null) setPlayer(parseInt(loadPlayer));
         if (loadDifficulty != null) setDifficulty(loadDifficulty);
+
     }
 
     LoadData()
@@ -152,7 +159,7 @@ export const Quiz = ({ route }: { route: any }) => {
     }, []);
 
     return (
-        <View>
+        <ScrollView>
             <LinearGradient style={styles.gradient} colors={["#ffb7b2", "#FFE0E0"]}>
                 <View style={styles.container}>
                     <View style={styles.header}>
@@ -190,16 +197,16 @@ export const Quiz = ({ route }: { route: any }) => {
                     </View>
                 </View>
             </LinearGradient>
-        </View>
+        </ScrollView>
     )
 }
 
+const windowHeight = Dimensions.get('window').height*.9425;
 const styles = StyleSheet.create({
     container: {
         paddingTop: Constants.statusBarHeight,
         flexDirection: "column",
-        flex: 1,
-        padding: 15
+        minHeight:windowHeight,
     },
 
     question: {
@@ -209,18 +216,20 @@ const styles = StyleSheet.create({
     },
 
     header: {
-        height: "20%",
+        padding:15,
+        paddingTop:normalTextSize*2,
+        paddingBottom:normalTextSize*2,
         justifyContent: "center",
     },
 
     main: {
-        height: "45%",
         justifyContent: "center",
         alignItems: "center",
     },
 
     footer: {
-        flex: 1,
+        padding:15,
+        paddingTop:normalTextSize*5,
         justifyContent: "center",
         alignItems: "center"
     },
