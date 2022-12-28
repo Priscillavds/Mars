@@ -20,8 +20,7 @@ const HomeScreen = () => {
             <LinearGradient style={styles.gradient} colors={["#ffb7b2","#FFE0E0" ]}>
                 <View style={styles.container}>
                 <Text style={styles.title}>Home</Text>
-                <Text style={styles.text}>Probeer deze moeilijke quiz en leer meer over verschillende onderwerpen. Vergeet zeker geen profiel aan te maken voor je score bij te houden. Zo kan je je score elke keer proberen te verbeteren. 
-                Is het nog een beetje te gemakkelijk, dan kan je altijd de settings aanpassen.</Text>
+                <Text style={styles.text}>Try this difficult quiz and learn about a lot of different subjects. Don't forget to make a profiel so your score can be kept for you. If you do this then you can try to break your record. Is it to easy, no problem. Go to settings and try the different settings.</Text>
             
                 <Image style={styles.tinyLogo} source={require('./assets/logo.png')}/>
                 <Button func={() => navigation.navigate("Quiz")} name="Quiz" backColor='red' borderColor='darkred' textColor="white" ></Button>
